@@ -286,6 +286,7 @@
         let activeMainTab = 'target';
         let currentCategoryTab = 'all';
         let checkedState = {};
+        let previousQuantities = {};
 
         // 메인 탭 전환 함수
         function switchMainTab(tab) {
@@ -397,6 +398,17 @@
 
         // 결과 영역 랜더링
         function renderResults(materialsMap, craftsSummary) {
+            // 필요 개수가 변경되었거나 더 이상 필요 없는 재료만 체크 해제 (개수가 동일한 재료는 체크 유지)
+            for (const [matName, isChecked] of Object.entries(checkedState)) {
+                if (!isChecked) continue;
+                const newCount = materialsMap[matName] || 0;
+                const oldCount = previousQuantities[matName] || 0;
+                if (newCount !== oldCount || newCount === 0) {
+                    checkedState[matName] = false;
+                }
+            }
+            previousQuantities = { ...materialsMap };
+
             const resultCard = document.getElementById('resultCard');
             const container = document.getElementById('resultGroupsContainer');
             const badge = document.getElementById('totalItemsBadge');
@@ -508,6 +520,7 @@
         // 체크 상태 초기화
         function resetCheckmarks() {
             checkedState = {};
+            previousQuantities = {};
             if (activeMainTab === 'target') calculateFromTarget();
             else calculateFromStock();
         }
