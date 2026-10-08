@@ -85,6 +85,12 @@
 
         <!-- Tab 1: 완성품 기준 입력 -->
         <div id="targetSection" class="space-y-6">
+            <div class="flex justify-between items-center px-1">
+                <span class="text-xs text-gray-400">원하는 완성품 제작 수량을 입력하세요.</span>
+                <button onclick="resetInputs()" class="bg-smokedark-800 hover:bg-smokedark-700 text-gray-300 hover:text-white px-3 py-1.5 rounded-lg text-xs font-medium transition flex items-center gap-1.5 border border-gray-700 shadow-sm">
+                    <i class="fa-solid fa-rotate-left text-[11px]"></i> 입력 수량 초기화
+                </button>
+            </div>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <!-- 라이프스톤 카드 -->
                 <div class="bg-smokedark-800/80 border border-smokedark-800 rounded-2xl p-5 shadow-xl">
@@ -145,7 +151,12 @@
                     <h2 class="text-lg font-semibold text-rosepink-300 flex items-center gap-2">
                         <i class="fa-solid fa-gem text-rosepink-400"></i> 핵심 광물 보유 개수
                     </h2>
-                    <span class="text-xs text-gray-400 bg-smokedark-900 px-2.5 py-1 rounded-full border border-gray-800">보유 광물 기준 계산</span>
+                    <div class="flex items-center gap-2">
+                        <span class="text-xs text-gray-400 bg-smokedark-900 px-2.5 py-1 rounded-full border border-gray-800 hidden sm:inline-block">보유 광물 기준 계산</span>
+                        <button onclick="resetInputs()" class="bg-smokedark-900 hover:bg-gray-800 text-gray-300 hover:text-white px-3 py-1.5 rounded-lg text-xs font-medium transition flex items-center gap-1.5 border border-gray-700">
+                            <i class="fa-solid fa-rotate-left text-[11px]"></i> 입력 수량 초기화
+                        </button>
+                    </div>
                 </div>
                 <div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
                     <div class="bg-smokedark-900/60 p-3 rounded-xl border border-gray-800/80">
@@ -519,6 +530,18 @@
 
         // 체크 상태 초기화
         function resetCheckmarks() {
+            checkedState = {};
+            previousQuantities = {};
+            if (activeMainTab === 'target') calculateFromTarget();
+            else calculateFromStock();
+        }
+
+        // 수량 입력 초기화
+        function resetInputs() {
+            const inputs = document.querySelectorAll('input[type="number"]');
+            inputs.forEach(input => {
+                input.value = 0;
+            });
             checkedState = {};
             previousQuantities = {};
             if (activeMainTab === 'target') calculateFromTarget();
