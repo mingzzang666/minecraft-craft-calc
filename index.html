@@ -25,10 +25,11 @@
                             600: '#d62657',
                         },
                         smokedark: {
-                            800: '#1e1c1f',
-                            850: '#181619',
-                            900: '#141215',
-                            950: '#0d0c0e',
+                            700: '#3a353b',
+                            800: '#2a262d',
+                            850: '#221e25',
+                            900: '#1b171d',
+                            950: '#120f14',
                         }
                     },
                     fontFamily: {
@@ -40,24 +41,87 @@
     </script>
     <style>
         body {
-            background-color: #0d0c0e;
-            color: #f3f4f6;
+            background-color: #120f14;
+            color: #f8fafc;
             font-family: 'Inter', sans-serif;
         }
         .custom-scrollbar::-webkit-scrollbar {
             width: 6px;
         }
         .custom-scrollbar::-webkit-scrollbar-track {
-            background: #181619;
+            background: #221e25;
         }
         .custom-scrollbar::-webkit-scrollbar-thumb {
-            background: #f27ba8;
+            background: #e83e6b;
             border-radius: 3px;
         }
-        .active-tab {
-            background-color: rgba(242, 123, 168, 0.2) !important;
-            color: #f7a8ca !important;
-            border: 1px solid rgba(242, 123, 168, 0.5) !important;
+        .tab-btn.active-tab {
+            background-color: #e83e6b;
+            color: white;
+            box-shadow: 0 4px 12px rgba(232, 62, 107, 0.3);
+        }
+        .card-bg {
+            background-color: #1b171d;
+            border: 1px solid #2a262d;
+        }
+        .inner-box {
+            background-color: #221e25;
+            border: 1px solid #3a353b;
+        }
+        .input-box {
+            background-color: #120f14;
+            border: 1px solid #3a353b;
+            color: #ffffff;
+        }
+        .input-box:focus {
+            border-color: #e83e6b;
+            outline: none;
+        }
+
+        /* 커스텀 체크박스 및 호버 카드 스타일 */
+        .item-card {
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .item-card:hover {
+            transform: translateY(-2px);
+            border-color: rgba(232, 62, 107, 0.5);
+            box-shadow: 0 4px 14px rgba(232, 62, 107, 0.15);
+        }
+        .custom-checkbox {
+            appearance: none;
+            -webkit-appearance: none;
+            width: 1.125rem;
+            height: 1.125rem;
+            border-radius: 0.375rem;
+            background-color: #2a262d;
+            border: 1px solid #524754;
+            cursor: pointer;
+            display: grid;
+            place-content: center;
+            transition: all 0.2s ease;
+            position: relative;
+        }
+        .custom-checkbox:hover {
+            border-color: #f27ba8;
+            background-color: #3a353b;
+            box-shadow: 0 0 8px rgba(232, 62, 107, 0.4);
+        }
+        .custom-checkbox::before {
+            content: "\f00c";
+            font-family: "Font Awesome 6 Free";
+            font-weight: 900;
+            font-size: 0.65rem;
+            color: white;
+            transform: scale(0);
+            transition: transform 0.15s ease-in-out;
+        }
+        .custom-checkbox:checked {
+            background-color: #e83e6b;
+            border-color: #e83e6b;
+            box-shadow: 0 0 10px rgba(232, 62, 107, 0.5);
+        }
+        .custom-checkbox:checked::before {
+            transform: scale(1);
         }
     </style>
 </head>
@@ -66,19 +130,19 @@
         
         <!-- Header -->
         <header class="text-center mb-8">
-            <div class="inline-flex items-center text-3xl mb-2 text-rosepink-300">
+            <div class="inline-flex items-center text-3xl mb-2 text-rosepink-400">
                 <i class="fa-solid fa-cube mr-3"></i>
-                <h1 class="text-2xl sm:text-3xl font-bold tracking-tight">마인크래프트 제작 계산기</h1>
+                <h1 class="text-2xl sm:text-3xl font-bold tracking-tight text-white">마인크래프트 제작 계산기</h1>
             </div>
             <p class="text-gray-400 text-sm">완성품 수량 기준 또는 보유 핵심 광물 기준으로 재료를 빠르게 계산합니다.</p>
         </header>
 
         <!-- Mode Selection Tabs -->
-        <div class="flex justify-center mb-8 gap-2 bg-smokedark-800 p-1.5 rounded-xl border border-rosepink-500/20 max-w-md mx-auto">
-            <button id="tabTargetBtn" onclick="switchMainTab('target')" class="flex-1 py-2.5 px-4 rounded-lg font-medium text-sm transition-all duration-200 bg-rosepink-500 text-white shadow-lg shadow-rosepink-500/20 flex items-center justify-center gap-2">
+        <div class="flex justify-center mb-8 gap-2 bg-smokedark-800 p-1.5 rounded-xl border border-smokedark-700 max-w-md mx-auto">
+            <button id="tabTargetBtn" onclick="switchMainTab('target')" class="flex-1 py-2 px-4 rounded-lg font-semibold text-sm transition-all duration-200 bg-rosepink-500 text-white shadow-md flex items-center justify-center gap-2">
                 <i class="fa-solid fa-bullseye"></i> 완성품 제작 수량 기준
             </button>
-            <button id="tabStockBtn" onclick="switchMainTab('stock')" class="flex-1 py-2.5 px-4 rounded-lg font-medium text-sm transition-all duration-200 text-gray-400 hover:text-white flex items-center justify-center gap-2">
+            <button id="tabStockBtn" onclick="switchMainTab('stock')" class="flex-1 py-2 px-4 rounded-lg font-semibold text-sm transition-all duration-200 text-gray-400 hover:text-white flex items-center justify-center gap-2">
                 <i class="fa-solid fa-gem"></i> 핵심 광물 보유량 기준
             </button>
         </div>
@@ -86,263 +150,142 @@
         <!-- Tab 1: 완성품 기준 입력 -->
         <div id="targetSection" class="space-y-6">
             <div class="flex justify-between items-center px-1">
-                <span class="text-xs text-gray-400">원하는 완성품 제작 수량을 입력하세요.</span>
-                <button onclick="resetInputs()" class="bg-smokedark-800 hover:bg-smokedark-700 text-gray-300 hover:text-white px-3 py-1.5 rounded-lg text-xs font-medium transition flex items-center gap-1.5 border border-gray-700 shadow-sm">
-                    <i class="fa-solid fa-rotate-left text-[11px]"></i> 입력 수량 초기화
+                <span class="text-xs text-rosepink-300 font-medium">원하는 완성품 제작 수량을 입력하세요.</span>
+                <button onclick="resetInputs()" class="bg-smokedark-800 hover:bg-smokedark-700 text-gray-300 hover:text-white px-3 py-1 rounded-lg text-xs font-medium transition flex items-center gap-1.5 border border-rosepink-500/30">
+                    <i class="fa-solid fa-rotate-left text-[11px] text-rosepink-400"></i> 입력 수량 초기화
                 </button>
             </div>
             
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <!-- 라이프스톤 카드 -->
-                <div class="bg-smokedark-800/80 border border-smokedark-800 rounded-2xl p-5 shadow-xl">
-                    <h2 class="text-base font-semibold text-rosepink-300 mb-3 flex items-center gap-2 border-b border-gray-800 pb-2">
+                <div class="card-bg rounded-2xl p-5 border border-rosepink-500/30 shadow-lg shadow-rosepink-950/20">
+                    <h2 class="text-base font-bold text-rosepink-300 mb-3 flex items-center gap-2 border-b border-smokedark-700 pb-2">
                         <i class="fa-solid fa-heart-pulse text-rosepink-400"></i> 라이프스톤
                     </h2>
                     <div class="space-y-2.5">
                         <div class="flex items-center justify-between">
                             <label class="text-xs text-gray-300 font-medium">하급 라이프스톤</label>
-                            <input type="number" id="target_하급 라이프스톤" min="0" value="0" oninput="calculateFromTarget()" class="w-20 bg-smokedark-900 border border-gray-700 rounded-lg px-2.5 py-1 text-right font-semibold text-rosepink-300 focus:outline-none focus:border-rosepink-400 transition text-sm">
+                            <input type="number" id="target_하급 라이프스톤" min="0" value="0" oninput="calculate()" class="w-20 input-box rounded-lg px-2.5 py-1 text-right font-bold text-sm focus:border-rosepink-400">
                         </div>
                         <div class="flex items-center justify-between">
                             <label class="text-xs text-gray-300 font-medium">중급 라이프스톤</label>
-                            <input type="number" id="target_중급 라이프스톤" min="0" value="0" oninput="calculateFromTarget()" class="w-20 bg-smokedark-900 border border-gray-700 rounded-lg px-2.5 py-1 text-right font-semibold text-rosepink-300 focus:outline-none focus:border-rosepink-400 transition text-sm">
+                            <input type="number" id="target_중급 라이프스톤" min="0" value="0" oninput="calculate()" class="w-20 input-box rounded-lg px-2.5 py-1 text-right font-bold text-sm focus:border-rosepink-400">
                         </div>
                         <div class="flex items-center justify-between">
                             <label class="text-xs text-gray-300 font-medium">상급 라이프스톤</label>
-                            <input type="number" id="target_상급 라이프스톤" min="0" value="0" oninput="calculateFromTarget()" class="w-20 bg-smokedark-900 border border-gray-700 rounded-lg px-2.5 py-1 text-right font-semibold text-rosepink-300 focus:outline-none focus:border-rosepink-400 transition text-sm">
+                            <input type="number" id="target_상급 라이프스톤" min="0" value="0" oninput="calculate()" class="w-20 input-box rounded-lg px-2.5 py-1 text-right font-bold text-sm focus:border-rosepink-400">
                         </div>
                     </div>
                 </div>
 
-                <!-- 형광 제련품 카드 -->
-                <div class="bg-smokedark-800/80 border border-smokedark-800 rounded-2xl p-5 shadow-xl">
-                    <h2 class="text-base font-semibold text-rosepink-300 mb-3 flex items-center gap-2 border-b border-gray-800 pb-2">
-                        <i class="fa-solid fa-wand-magic-sparkles text-rosepink-400"></i> 형광 제련품
+                <!-- 형광 장비 카드 -->
+                <div class="card-bg rounded-2xl p-5 border border-rosepink-500/30 shadow-lg shadow-rosepink-950/20">
+                    <h2 class="text-base font-bold text-rosepink-300 mb-3 flex items-center gap-2 border-b border-smokedark-700 pb-2">
+                        <i class="fa-solid fa-wand-magic-sparkles text-rosepink-400"></i> 형광 장비
                     </h2>
                     <div class="space-y-2.5">
                         <div class="flex items-center justify-between">
                             <label class="text-xs text-gray-300 font-medium">오르딘 미니 망치</label>
-                            <input type="number" id="target_오르딘" min="0" value="0" oninput="calculateFromTarget()" class="w-20 bg-smokedark-900 border border-gray-700 rounded-lg px-2.5 py-1 text-right font-semibold text-rosepink-300 focus:outline-none focus:border-rosepink-400 transition text-sm">
+                            <input type="number" id="target_오르딘 미니 망치" min="0" value="0" oninput="calculate()" class="w-20 input-box rounded-lg px-2.5 py-1 text-right font-bold text-sm focus:border-rosepink-400">
                         </div>
                         <div class="flex items-center justify-between">
                             <label class="text-xs text-gray-300 font-medium">루미트 강철 방패</label>
-                            <input type="number" id="target_루미트" min="0" value="0" oninput="calculateFromTarget()" class="w-20 bg-smokedark-900 border border-gray-700 rounded-lg px-2.5 py-1 text-right font-semibold text-rosepink-300 focus:outline-none focus:border-rosepink-400 transition text-sm">
+                            <input type="number" id="target_루미트 강철 방패" min="0" value="0" oninput="calculate()" class="w-20 input-box rounded-lg px-2.5 py-1 text-right font-bold text-sm focus:border-rosepink-400">
                         </div>
                         <div class="flex items-center justify-between">
                             <label class="text-xs text-gray-300 font-medium">크레온 장인 석궁</label>
-                            <input type="number" id="target_크레온" min="0" value="0" oninput="calculateFromTarget()" class="w-20 bg-smokedark-900 border border-gray-700 rounded-lg px-2.5 py-1 text-right font-semibold text-rosepink-300 focus:outline-none focus:border-rosepink-400 transition text-sm">
+                            <input type="number" id="target_크레온 장인 석궁" min="0" value="0" oninput="calculate()" class="w-20 input-box rounded-lg px-2.5 py-1 text-right font-bold text-sm focus:border-rosepink-400">
                         </div>
                         <div class="flex items-center justify-between">
                             <label class="text-xs text-gray-300 font-medium">벨릭 사냥 스피어</label>
-                            <input type="number" id="target_벨릭" min="0" value="0" oninput="calculateFromTarget()" class="w-20 bg-smokedark-900 border border-gray-700 rounded-lg px-2.5 py-1 text-right font-semibold text-rosepink-300 focus:outline-none focus:border-rosepink-400 transition text-sm">
+                            <input type="number" id="target_벨릭 사냥 스피어" min="0" value="0" oninput="calculate()" class="w-20 input-box rounded-lg px-2.5 py-1 text-right font-bold text-sm focus:border-rosepink-400">
                         </div>
                         <div class="flex items-center justify-between">
                             <label class="text-xs text-gray-300 font-medium">세르칸 초승달 단검</label>
-                            <input type="number" id="target_세르칸" min="0" value="0" oninput="calculateFromTarget()" class="w-20 bg-smokedark-900 border border-gray-700 rounded-lg px-2.5 py-1 text-right font-semibold text-rosepink-300 focus:outline-none focus:border-rosepink-400 transition text-sm">
+                            <input type="number" id="target_세르칸 초승달 단검" min="0" value="0" oninput="calculate()" class="w-20 input-box rounded-lg px-2.5 py-1 text-right font-bold text-sm focus:border-rosepink-400">
                         </div>
                     </div>
                 </div>
             </div>
 
-            <!-- 세공품 (일반/탁월한 - 독립된 카드 섹션으로 분리) -->
-            <div class="bg-smokedark-800/80 border border-smokedark-800 rounded-2xl p-5 shadow-xl">
-                <h2 class="text-base font-semibold text-rosepink-300 mb-3 flex items-center gap-2 border-b border-gray-800 pb-2">
-                    <i class="fa-solid fa-gem text-rosepink-400"></i> 세공품
+            <!-- 세공품 (일반/탁월한) -->
+            <div class="card-bg rounded-2xl p-5 border border-rosepink-500/30 shadow-lg shadow-rosepink-950/20">
+                <h2 class="text-base font-bold text-rosepink-300 mb-3 flex items-center gap-2 border-b border-smokedark-700 pb-2">
+                    <i class="fa-solid fa-gem text-rosepink-400"></i> 세공품 (일반 / 100 / 탁월한)
                 </h2>
-                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
-                    <!-- 키론 -->
-                    <div class="bg-smokedark-900/60 p-3 rounded-xl border border-gray-800/80 space-y-2">
-                        <div class="text-xs font-bold text-rosepink-300 border-b border-gray-800 pb-1">키론 계열</div>
-                        <div class="flex items-center justify-between text-xs"><span class="text-gray-300">키론 오르골</span><input type="number" id="target_키론 오르골" min="0" value="0" oninput="calculateFromTarget()" class="w-16 bg-smokedark-950 border border-gray-700 rounded px-1.5 py-0.5 text-right font-semibold text-rosepink-300"></div>
-                        <div class="flex items-center justify-between text-xs"><span class="text-rosepink-200">키론 오르골 (100)</span><input type="number" id="target_키론 오르골 (100)" min="0" value="0" oninput="calculateFromTarget()" class="w-16 bg-smokedark-950 border border-gray-700 rounded px-1.5 py-0.5 text-right font-semibold text-rosepink-300"></div>
-                        <div class="flex items-center justify-between text-xs"><span class="text-purple-300">탁월한 키론 오르골</span><input type="number" id="target_탁월한 키론 오르골" min="0" value="0" oninput="calculateFromTarget()" class="w-16 bg-smokedark-950 border border-gray-700 rounded px-1.5 py-0.5 text-right font-semibold text-rosepink-300"></div>
-                    </div>
-                    <!-- 테라온 -->
-                    <div class="bg-smokedark-900/60 p-3 rounded-xl border border-gray-800/80 space-y-2">
-                        <div class="text-xs font-bold text-rosepink-300 border-b border-gray-800 pb-1">테라온 계열</div>
-                        <div class="flex items-center justify-between text-xs"><span class="text-gray-300">테라온 축음기</span><input type="number" id="target_테라온 축음기" min="0" value="0" oninput="calculateFromTarget()" class="w-16 bg-smokedark-950 border border-gray-700 rounded px-1.5 py-0.5 text-right font-semibold text-rosepink-300"></div>
-                        <div class="flex items-center justify-between text-xs"><span class="text-rosepink-200">테라온 축음기 (100)</span><input type="number" id="target_테라온 축음기 (100)" min="0" value="0" oninput="calculateFromTarget()" class="w-16 bg-smokedark-950 border border-gray-700 rounded px-1.5 py-0.5 text-right font-semibold text-rosepink-300"></div>
-                        <div class="flex items-center justify-between text-xs"><span class="text-purple-300">탁월한 테라온 축음기</span><input type="number" id="target_탁월한 테라온 축음기" min="0" value="0" oninput="calculateFromTarget()" class="w-16 bg-smokedark-950 border border-gray-700 rounded px-1.5 py-0.5 text-right font-semibold text-rosepink-300"></div>
-                    </div>
-                    <!-- 실바니움 -->
-                    <div class="bg-smokedark-900/60 p-3 rounded-xl border border-gray-800/80 space-y-2">
-                        <div class="text-xs font-bold text-rosepink-300 border-b border-gray-800 pb-1">실바니움 계열</div>
-                        <div class="flex items-center justify-between text-xs"><span class="text-gray-300">실바니움 만년필</span><input type="number" id="target_실바니움 만년필" min="0" value="0" oninput="calculateFromTarget()" class="w-16 bg-smokedark-950 border border-gray-700 rounded px-1.5 py-0.5 text-right font-semibold text-rosepink-300"></div>
-                        <div class="flex items-center justify-between text-xs"><span class="text-rosepink-200">실바니움 만년필 (100)</span><input type="number" id="target_실바니움 만년필 (100)" min="0" value="0" oninput="calculateFromTarget()" class="w-16 bg-smokedark-950 border border-gray-700 rounded px-1.5 py-0.5 text-right font-semibold text-rosepink-300"></div>
-                        <div class="flex items-center justify-between text-xs"><span class="text-purple-300">탁월한 실바니움 만년필</span><input type="number" id="target_탁월한 실바니움 만년필" min="0" value="0" oninput="calculateFromTarget()" class="w-16 bg-smokedark-950 border border-gray-700 rounded px-1.5 py-0.5 text-right font-semibold text-rosepink-300"></div>
-                    </div>
-                    <!-- 라온 -->
-                    <div class="bg-smokedark-900/60 p-3 rounded-xl border border-gray-800/80 space-y-2">
-                        <div class="text-xs font-bold text-rosepink-300 border-b border-gray-800 pb-1">라온 계열</div>
-                        <div class="flex items-center justify-between text-xs"><span class="text-gray-300">라온 만화경</span><input type="number" id="target_라온 만화경" min="0" value="0" oninput="calculateFromTarget()" class="w-16 bg-smokedark-950 border border-gray-700 rounded px-1.5 py-0.5 text-right font-semibold text-rosepink-300"></div>
-                        <div class="flex items-center justify-between text-xs"><span class="text-rosepink-200">라온 만화경 (100)</span><input type="number" id="target_라온 만화경 (100)" min="0" value="0" oninput="calculateFromTarget()" class="w-16 bg-smokedark-950 border border-gray-700 rounded px-1.5 py-0.5 text-right font-semibold text-rosepink-300"></div>
-                        <div class="flex items-center justify-between text-xs"><span class="text-purple-300">탁월한 라온 만화경</span><input type="number" id="target_탁월한 라온 만화경" min="0" value="0" oninput="calculateFromTarget()" class="w-16 bg-smokedark-950 border border-gray-700 rounded px-1.5 py-0.5 text-right font-semibold text-rosepink-300"></div>
-                    </div>
-                    <!-- 제피르 -->
-                    <div class="bg-smokedark-900/60 p-3 rounded-xl border border-gray-800/80 space-y-2">
-                        <div class="text-xs font-bold text-rosepink-300 border-b border-gray-800 pb-1">제피르 계열</div>
-                        <div class="flex items-center justify-between text-xs"><span class="text-gray-300">제피르 라이터</span><input type="number" id="target_제피르 라이터" min="0" value="0" oninput="calculateFromTarget()" class="w-16 bg-smokedark-950 border border-gray-700 rounded px-1.5 py-0.5 text-right font-semibold text-rosepink-300"></div>
-                        <div class="flex items-center justify-between text-xs"><span class="text-rosepink-200">제피르 라이터 (100)</span><input type="number" id="target_제피르 라이터 (100)" min="0" value="0" oninput="calculateFromTarget()" class="w-16 bg-smokedark-950 border border-gray-700 rounded px-1.5 py-0.5 text-right font-semibold text-rosepink-300"></div>
-                        <div class="flex items-center justify-between text-xs"><span class="text-purple-300">탁월한 제피르 라이터</span><input type="number" id="target_탁월한 제피르 라이터" min="0" value="0" oninput="calculateFromTarget()" class="w-16 bg-smokedark-950 border border-gray-700 rounded px-1.5 py-0.5 text-right font-semibold text-rosepink-300"></div>
-                    </div>
-                    <!-- 아스트랄 -->
-                    <div class="bg-smokedark-900/60 p-3 rounded-xl border border-gray-800/80 space-y-2">
-                        <div class="text-xs font-bold text-rosepink-300 border-b border-gray-800 pb-1">아스트랄 계열</div>
-                        <div class="flex items-center justify-between text-xs"><span class="text-gray-300">아스트랄 이어커프</span><input type="number" id="target_아스트랄 이어커프" min="0" value="0" oninput="calculateFromTarget()" class="w-16 bg-smokedark-950 border border-gray-700 rounded px-1.5 py-0.5 text-right font-semibold text-rosepink-300"></div>
-                        <div class="flex items-center justify-between text-xs"><span class="text-rosepink-200">아스트랄 이어커프 (100)</span><input type="number" id="target_아스트랄 이어커프 (100)" min="0" value="0" oninput="calculateFromTarget()" class="w-16 bg-smokedark-950 border border-gray-700 rounded px-1.5 py-0.5 text-right font-semibold text-rosepink-300"></div>
-                        <div class="flex items-center justify-between text-xs"><span class="text-purple-300">탁월한 아스트랄 이어커프</span><input type="number" id="target_탁월한 아스트랄 이어커프" min="0" value="0" oninput="calculateFromTarget()" class="w-16 bg-smokedark-950 border border-gray-700 rounded px-1.5 py-0.5 text-right font-semibold text-rosepink-300"></div>
-                    </div>
-                    <!-- 넬트 -->
-                    <div class="bg-smokedark-900/60 p-3 rounded-xl border border-gray-800/80 space-y-2">
-                        <div class="text-xs font-bold text-rosepink-300 border-b border-gray-800 pb-1">넬트 계열</div>
-                        <div class="flex items-center justify-between text-xs"><span class="text-gray-300">넬트 천체관측기</span><input type="number" id="target_넬트 천체관측기" min="0" value="0" oninput="calculateFromTarget()" class="w-16 bg-smokedark-950 border border-gray-700 rounded px-1.5 py-0.5 text-right font-semibold text-rosepink-300"></div>
-                        <div class="flex items-center justify-between text-xs"><span class="text-rosepink-200">넬트 천체관측기 (100)</span><input type="number" id="target_넬트 천체관측기 (100)" min="0" value="0" oninput="calculateFromTarget()" class="w-16 bg-smokedark-950 border border-gray-700 rounded px-1.5 py-0.5 text-right font-semibold text-rosepink-300"></div>
-                        <div class="flex items-center justify-between text-xs"><span class="text-purple-300">탁월한 넬트 천체관측기</span><input type="number" id="target_탁월한 넬트 천체관측기" min="0" value="0" oninput="calculateFromTarget()" class="w-16 bg-smokedark-950 border border-gray-700 rounded px-1.5 py-0.5 text-right font-semibold text-rosepink-300"></div>
-                    </div>
-                    <!-- 세피아 -->
-                    <div class="bg-smokedark-900/60 p-3 rounded-xl border border-gray-800/80 space-y-2">
-                        <div class="text-xs font-bold text-rosepink-300 border-b border-gray-800 pb-1">세피아 계열</div>
-                        <div class="flex items-center justify-between text-xs"><span class="text-gray-300">세피아 회중시계</span><input type="number" id="target_세피아 회중시계" min="0" value="0" oninput="calculateFromTarget()" class="w-16 bg-smokedark-950 border border-gray-700 rounded px-1.5 py-0.5 text-right font-semibold text-rosepink-300"></div>
-                        <div class="flex items-center justify-between text-xs"><span class="text-rosepink-200">세피아 회중시계 (100)</span><input type="number" id="target_세피아 회중시계 (100)" min="0" value="0" oninput="calculateFromTarget()" class="w-16 bg-smokedark-950 border border-gray-700 rounded px-1.5 py-0.5 text-right font-semibold text-rosepink-300"></div>
-                        <div class="flex items-center justify-between text-xs"><span class="text-purple-300">탁월한 세피아 회중시계</span><input type="number" id="target_탁월한 세피아 회중시계" min="0" value="0" oninput="calculateFromTarget()" class="w-16 bg-smokedark-950 border border-gray-700 rounded px-1.5 py-0.5 text-right font-semibold text-rosepink-300"></div>
-                    </div>
-                    <!-- 피로시아 -->
-                    <div class="bg-smokedark-900/60 p-3 rounded-xl border border-gray-800/80 space-y-2">
-                        <div class="text-xs font-bold text-rosepink-300 border-b border-gray-800 pb-1">피로시아 계열</div>
-                        <div class="flex items-center justify-between text-xs"><span class="text-gray-300">피로시아 단안경</span><input type="number" id="target_피로시아 단안경" min="0" value="0" oninput="calculateFromTarget()" class="w-16 bg-smokedark-950 border border-gray-700 rounded px-1.5 py-0.5 text-right font-semibold text-rosepink-300"></div>
-                        <div class="flex items-center justify-between text-xs"><span class="text-rosepink-200">피로시아 단안경 (100)</span><input type="number" id="target_피로시아 단안경 (100)" min="0" value="0" oninput="calculateFromTarget()" class="w-16 bg-smokedark-950 border border-gray-700 rounded px-1.5 py-0.5 text-right font-semibold text-rosepink-300"></div>
-                        <div class="flex items-center justify-between text-xs"><span class="text-purple-300">탁월한 피로시아 단안경</span><input type="number" id="target_탁월한 피로시아 단안경" min="0" value="0" oninput="calculateFromTarget()" class="w-16 bg-smokedark-950 border border-gray-700 rounded px-1.5 py-0.5 text-right font-semibold text-rosepink-300"></div>
-                    </div>
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3" id="targetJewelryGrid">
+                    <!-- Dynamic Target Jewelry Inputs -->
                 </div>
             </div>
         </div>
 
         <!-- Tab 2: 핵심 광물 보유량 기준 입력 -->
         <div id="stockSection" class="space-y-6 hidden">
-            <div class="bg-smokedark-800/80 border border-smokedark-800 rounded-2xl p-5 shadow-xl">
-                <div class="flex items-center justify-between mb-4 pb-2 border-b border-gray-800">
-                    <h2 class="text-lg font-semibold text-rosepink-300 flex items-center gap-2">
-                        <i class="fa-solid fa-gem text-rosepink-400"></i> 핵심 광물 및 보석 보유 개수
+            <div class="card-bg rounded-2xl p-5 space-y-6">
+                <div class="flex items-center justify-between pb-3 border-b border-smokedark-700">
+                    <h2 class="text-lg font-bold text-rosepink-400 flex items-center gap-2">
+                        <i class="fa-solid fa-gem"></i> 핵심 광물 및 보석 보유 개수
                     </h2>
                     <div class="flex items-center gap-2">
-                        <span class="text-xs text-gray-400 bg-smokedark-900 px-2.5 py-1 rounded-full border border-gray-800 hidden sm:inline-block">보유 광물/보석 기준 계산</span>
-                        <button onclick="resetInputs()" class="bg-smokedark-900 hover:bg-gray-800 text-gray-300 hover:text-white px-3 py-1.5 rounded-lg text-xs font-medium transition flex items-center gap-1.5 border border-gray-700">
+                        <span class="text-xs text-gray-400 bg-smokedark-900 px-3 py-1 rounded-full border border-smokedark-700 font-medium hidden sm:inline-block">보유 광물/보석 기준 계산</span>
+                        <button onclick="resetInputs()" class="bg-smokedark-800 hover:bg-smokedark-700 text-gray-300 hover:text-white px-3 py-1.5 rounded-lg text-xs font-medium transition flex items-center gap-1.5 border border-smokedark-700">
                             <i class="fa-solid fa-rotate-left text-[11px]"></i> 입력 수량 초기화
                         </button>
                     </div>
                 </div>
-                <!-- 라이프스톤 핵심 광물 (코룸, 리프톤, 세렌트) -->
-                <div class="mb-4">
-                    <p class="text-xs font-semibold text-rosepink-400 mb-2">라이프스톤 핵심 광물</p>
-                    <div class="grid grid-cols-3 gap-3">
-                        <div class="bg-smokedark-900/60 p-2.5 rounded-xl border border-gray-800/80">
-                            <label class="block text-xs font-semibold text-purple-300 mb-1">코룸</label>
-                            <input type="number" id="stock_코룸" min="0" value="0" oninput="calculateFromStock()" class="w-full bg-smokedark-950 border border-gray-700 rounded-lg px-2 py-1 text-right font-semibold text-rosepink-300 text-sm">
+
+                <!-- 라이프스톤 핵심 광물 -->
+                <div class="border border-smokedark-700 bg-smokedark-900/50 p-4 rounded-xl relative">
+                    <span class="absolute -top-2.5 left-4 px-2 bg-smokedark-800 text-xs font-semibold text-rosepink-400 border border-smokedark-700 rounded">라이프스톤 핵심 광물</span>
+                    <div class="grid grid-cols-3 gap-3 pt-1">
+                        <div class="inner-box p-3 rounded-xl">
+                            <label class="block text-xs font-semibold text-gray-300 mb-1">코룸</label>
+                            <input type="number" id="stock_코룸" min="0" value="0" oninput="calculate()" class="w-full input-box rounded-lg px-2.5 py-1 text-right font-bold text-sm">
                         </div>
-                        <div class="bg-smokedark-900/60 p-2.5 rounded-xl border border-gray-800/80">
-                            <label class="block text-xs font-semibold text-purple-300 mb-1">리프톤</label>
-                            <input type="number" id="stock_리프톤" min="0" value="0" oninput="calculateFromStock()" class="w-full bg-smokedark-950 border border-gray-700 rounded-lg px-2 py-1 text-right font-semibold text-rosepink-300 text-sm">
+                        <div class="inner-box p-3 rounded-xl">
+                            <label class="block text-xs font-semibold text-gray-300 mb-1">리프톤</label>
+                            <input type="number" id="stock_리프톤" min="0" value="0" oninput="calculate()" class="w-full input-box rounded-lg px-2.5 py-1 text-right font-bold text-sm">
                         </div>
-                        <div class="bg-smokedark-900/60 p-2.5 rounded-xl border border-gray-800/80">
-                            <label class="block text-xs font-semibold text-purple-300 mb-1">세렌트</label>
-                            <input type="number" id="stock_세렌트" min="0" value="0" oninput="calculateFromStock()" class="w-full bg-smokedark-950 border border-gray-700 rounded-lg px-2 py-1 text-right font-semibold text-rosepink-300 text-sm">
+                        <div class="inner-box p-3 rounded-xl">
+                            <label class="block text-xs font-semibold text-gray-300 mb-1">세렌트</label>
+                            <input type="number" id="stock_세렌트" min="0" value="0" oninput="calculate()" class="w-full input-box rounded-lg px-2.5 py-1 text-right font-bold text-sm">
                         </div>
                     </div>
                 </div>
 
-                <!-- 형광 제련품 핵심 광물 (오르딘, 루미트, 크레온, 벨릭, 세르칸) -->
-                <div class="mb-4">
-                    <p class="text-xs font-semibold text-rosepink-400 mb-2">형광 제련품 핵심 광물</p>
-                    <div class="grid grid-cols-2 sm:grid-cols-5 gap-3">
-                        <div class="bg-smokedark-900/60 p-2.5 rounded-xl border border-gray-800/80">
-                            <label class="block text-xs font-semibold text-purple-300 mb-1">오르딘</label>
-                            <input type="number" id="stock_오르딘" min="0" value="0" oninput="calculateFromStock()" class="w-full bg-smokedark-950 border border-gray-700 rounded-lg px-2 py-1 text-right font-semibold text-rosepink-300 text-sm">
+                <!-- 형광 핵심 광물 -->
+                <div class="border border-smokedark-700 bg-smokedark-900/50 p-4 rounded-xl relative">
+                    <span class="absolute -top-2.5 left-4 px-2 bg-smokedark-800 text-xs font-semibold text-rosepink-400 border border-smokedark-700 rounded">형광 핵심 광물</span>
+                    <div class="grid grid-cols-2 sm:grid-cols-5 gap-3 pt-1">
+                        <div class="inner-box p-3 rounded-xl">
+                            <label class="block text-xs font-semibold text-gray-300 mb-1">오르딘</label>
+                            <input type="number" id="stock_오르딘" min="0" value="0" oninput="calculate()" class="w-full input-box rounded-lg px-2.5 py-1 text-right font-bold text-sm">
                         </div>
-                        <div class="bg-smokedark-900/60 p-2.5 rounded-xl border border-gray-800/80">
-                            <label class="block text-xs font-semibold text-purple-300 mb-1">루미트</label>
-                            <input type="number" id="stock_루미트" min="0" value="0" oninput="calculateFromStock()" class="w-full bg-smokedark-950 border border-gray-700 rounded-lg px-2 py-1 text-right font-semibold text-rosepink-300 text-sm">
+                        <div class="inner-box p-3 rounded-xl">
+                            <label class="block text-xs font-semibold text-gray-300 mb-1">루미트</label>
+                            <input type="number" id="stock_루미트" min="0" value="0" oninput="calculate()" class="w-full input-box rounded-lg px-2.5 py-1 text-right font-bold text-sm">
                         </div>
-                        <div class="bg-smokedark-900/60 p-2.5 rounded-xl border border-gray-800/80">
-                            <label class="block text-xs font-semibold text-purple-300 mb-1">크레온</label>
-                            <input type="number" id="stock_크레온" min="0" value="0" oninput="calculateFromStock()" class="w-full bg-smokedark-950 border border-gray-700 rounded-lg px-2 py-1 text-right font-semibold text-rosepink-300 text-sm">
+                        <div class="inner-box p-3 rounded-xl">
+                            <label class="block text-xs font-semibold text-gray-300 mb-1">크레온</label>
+                            <input type="number" id="stock_크레온" min="0" value="0" oninput="calculate()" class="w-full input-box rounded-lg px-2.5 py-1 text-right font-bold text-sm">
                         </div>
-                        <div class="bg-smokedark-900/60 p-2.5 rounded-xl border border-gray-800/80">
-                            <label class="block text-xs font-semibold text-purple-300 mb-1">벨릭</label>
-                            <input type="number" id="stock_벨릭" min="0" value="0" oninput="calculateFromStock()" class="w-full bg-smokedark-950 border border-gray-700 rounded-lg px-2 py-1 text-right font-semibold text-rosepink-300 text-sm">
+                        <div class="inner-box p-3 rounded-xl">
+                            <label class="block text-xs font-semibold text-gray-300 mb-1">벨릭</label>
+                            <input type="number" id="stock_벨릭" min="0" value="0" oninput="calculate()" class="w-full input-box rounded-lg px-2.5 py-1 text-right font-bold text-sm">
                         </div>
-                        <div class="bg-smokedark-900/60 p-2.5 rounded-xl border border-gray-800/80 col-span-2 sm:col-span-1">
-                            <label class="block text-xs font-semibold text-purple-300 mb-1">세르칸</label>
-                            <input type="number" id="stock_세르칸" min="0" value="0" oninput="calculateFromStock()" class="w-full bg-smokedark-950 border border-gray-700 rounded-lg px-2 py-1 text-right font-semibold text-rosepink-300 text-sm">
+                        <div class="inner-box p-3 rounded-xl sm:col-span-1 col-span-2">
+                            <label class="block text-xs font-semibold text-gray-300 mb-1">세르칸</label>
+                            <input type="number" id="stock_세르칸" min="0" value="0" oninput="calculate()" class="w-full input-box rounded-lg px-2.5 py-1 text-right font-bold text-sm">
                         </div>
                     </div>
                 </div>
 
-                <!-- 세공품 핵심 보석 (9종 + 탁월한) 깔끔한 2열 그리드 -->
-                <div>
-                    <p class="text-xs font-semibold text-rosepink-400 mb-2">세공품 핵심 보석 </p>
-                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
-                        <!-- 키론 -->
-                        <div class="bg-smokedark-900/60 p-3 rounded-xl border border-gray-800/80 space-y-2">
-                            <div class="text-xs font-bold text-rosepink-300 border-b border-gray-800 pb-1">키론 계열</div>
-                            <div class="flex items-center justify-between text-xs"><span class="text-gray-300">키론</span><input type="number" id="stock_키론" min="0" value="0" oninput="calculateFromStock()" class="w-16 bg-smokedark-950 border border-gray-700 rounded px-1.5 py-0.5 text-right font-semibold text-rosepink-300"></div>
-                            <div class="flex items-center justify-between text-xs"><span class="text-rosepink-200">키론 (100)</span><input type="number" id="stock_키론 (100)" min="0" value="0" oninput="calculateFromStock()" class="w-16 bg-smokedark-950 border border-gray-700 rounded px-1.5 py-0.5 text-right font-semibold text-rosepink-300"></div>
-                            <div class="flex items-center justify-between text-xs"><span class="text-purple-300">탁월한 키론</span><input type="number" id="stock_탁월한 키론" min="0" value="0" oninput="calculateFromStock()" class="w-16 bg-smokedark-950 border border-gray-700 rounded px-1.5 py-0.5 text-right font-semibold text-rosepink-300"></div>
-                        </div>
-                        <!-- 테라온 -->
-                        <div class="bg-smokedark-900/60 p-3 rounded-xl border border-gray-800/80 space-y-2">
-                            <div class="text-xs font-bold text-rosepink-300 border-b border-gray-800 pb-1">테라온 계열</div>
-                            <div class="flex items-center justify-between text-xs"><span class="text-gray-300">테라온</span><input type="number" id="stock_테라온" min="0" value="0" oninput="calculateFromStock()" class="w-16 bg-smokedark-950 border border-gray-700 rounded px-1.5 py-0.5 text-right font-semibold text-rosepink-300"></div>
-                            <div class="flex items-center justify-between text-xs"><span class="text-rosepink-200">테라온 (100)</span><input type="number" id="stock_테라온 (100)" min="0" value="0" oninput="calculateFromStock()" class="w-16 bg-smokedark-950 border border-gray-700 rounded px-1.5 py-0.5 text-right font-semibold text-rosepink-300"></div>
-                            <div class="flex items-center justify-between text-xs"><span class="text-purple-300">탁월한 테라온</span><input type="number" id="stock_탁월한 테라온" min="0" value="0" oninput="calculateFromStock()" class="w-16 bg-smokedark-950 border border-gray-700 rounded px-1.5 py-0.5 text-right font-semibold text-rosepink-300"></div>
-                        </div>
-                        <!-- 실바니움 -->
-                        <div class="bg-smokedark-900/60 p-3 rounded-xl border border-gray-800/80 space-y-2">
-                            <div class="text-xs font-bold text-rosepink-300 border-b border-gray-800 pb-1">실바니움 계열</div>
-                            <div class="flex items-center justify-between text-xs"><span class="text-gray-300">실바니움</span><input type="number" id="stock_실바니움" min="0" value="0" oninput="calculateFromStock()" class="w-16 bg-smokedark-950 border border-gray-700 rounded px-1.5 py-0.5 text-right font-semibold text-rosepink-300"></div>
-                            <div class="flex items-center justify-between text-xs"><span class="text-rosepink-200">실바니움 (100)</span><input type="number" id="stock_실바니움 (100)" min="0" value="0" oninput="calculateFromStock()" class="w-16 bg-smokedark-950 border border-gray-700 rounded px-1.5 py-0.5 text-right font-semibold text-rosepink-300"></div>
-                            <div class="flex items-center justify-between text-xs"><span class="text-purple-300">탁월한 실바니움</span><input type="number" id="stock_탁월한 실바니움" min="0" value="0" oninput="calculateFromStock()" class="w-16 bg-smokedark-950 border border-gray-700 rounded px-1.5 py-0.5 text-right font-semibold text-rosepink-300"></div>
-                        </div>
-                        <!-- 라온 -->
-                        <div class="bg-smokedark-900/60 p-3 rounded-xl border border-gray-800/80 space-y-2">
-                            <div class="text-xs font-bold text-rosepink-300 border-b border-gray-800 pb-1">라온 계열</div>
-                            <div class="flex items-center justify-between text-xs"><span class="text-gray-300">라온</span><input type="number" id="stock_라온" min="0" value="0" oninput="calculateFromStock()" class="w-16 bg-smokedark-950 border border-gray-700 rounded px-1.5 py-0.5 text-right font-semibold text-rosepink-300"></div>
-                            <div class="flex items-center justify-between text-xs"><span class="text-rosepink-200">라온 (100)</span><input type="number" id="stock_라온 (100)" min="0" value="0" oninput="calculateFromStock()" class="w-16 bg-smokedark-950 border border-gray-700 rounded px-1.5 py-0.5 text-right font-semibold text-rosepink-300"></div>
-                            <div class="flex items-center justify-between text-xs"><span class="text-purple-300">탁월한 라온</span><input type="number" id="stock_탁월한 라온" min="0" value="0" oninput="calculateFromStock()" class="w-16 bg-smokedark-950 border border-gray-700 rounded px-1.5 py-0.5 text-right font-semibold text-rosepink-300"></div>
-                        </div>
-                        <!-- 제피르 -->
-                        <div class="bg-smokedark-900/60 p-3 rounded-xl border border-gray-800/80 space-y-2">
-                            <div class="text-xs font-bold text-rosepink-300 border-b border-gray-800 pb-1">제피르 계열</div>
-                            <div class="flex items-center justify-between text-xs"><span class="text-gray-300">제피르</span><input type="number" id="stock_제피르" min="0" value="0" oninput="calculateFromStock()" class="w-16 bg-smokedark-950 border border-gray-700 rounded px-1.5 py-0.5 text-right font-semibold text-rosepink-300"></div>
-                            <div class="flex items-center justify-between text-xs"><span class="text-rosepink-200">제피르 (100)</span><input type="number" id="stock_제피르 (100)" min="0" value="0" oninput="calculateFromStock()" class="w-16 bg-smokedark-950 border border-gray-700 rounded px-1.5 py-0.5 text-right font-semibold text-rosepink-300"></div>
-                            <div class="flex items-center justify-between text-xs"><span class="text-purple-300">탁월한 제피르</span><input type="number" id="stock_탁월한 제피르" min="0" value="0" oninput="calculateFromStock()" class="w-16 bg-smokedark-950 border border-gray-700 rounded px-1.5 py-0.5 text-right font-semibold text-rosepink-300"></div>
-                        </div>
-                        <!-- 아스트랄 -->
-                        <div class="bg-smokedark-900/60 p-3 rounded-xl border border-gray-800/80 space-y-2">
-                            <div class="text-xs font-bold text-rosepink-300 border-b border-gray-800 pb-1">아스트랄 계열</div>
-                            <div class="flex items-center justify-between text-xs"><span class="text-gray-300">아스트랄</span><input type="number" id="stock_아스트랄" min="0" value="0" oninput="calculateFromStock()" class="w-16 bg-smokedark-950 border border-gray-700 rounded px-1.5 py-0.5 text-right font-semibold text-rosepink-300"></div>
-                            <div class="flex items-center justify-between text-xs"><span class="text-rosepink-200">아스트랄 (100)</span><input type="number" id="stock_아스트랄 (100)" min="0" value="0" oninput="calculateFromStock()" class="w-16 bg-smokedark-950 border border-gray-700 rounded px-1.5 py-0.5 text-right font-semibold text-rosepink-300"></div>
-                            <div class="flex items-center justify-between text-xs"><span class="text-purple-300">탁월한 아스트랄</span><input type="number" id="stock_탁월한 아스트랄" min="0" value="0" oninput="calculateFromStock()" class="w-16 bg-smokedark-950 border border-gray-700 rounded px-1.5 py-0.5 text-right font-semibold text-rosepink-300"></div>
-                        </div>
-                        <!-- 넬트 -->
-                        <div class="bg-smokedark-900/60 p-3 rounded-xl border border-gray-800/80 space-y-2">
-                            <div class="text-xs font-bold text-rosepink-300 border-b border-gray-800 pb-1">넬트 계열</div>
-                            <div class="flex items-center justify-between text-xs"><span class="text-gray-300">넬트</span><input type="number" id="stock_넬트" min="0" value="0" oninput="calculateFromStock()" class="w-16 bg-smokedark-950 border border-gray-700 rounded px-1.5 py-0.5 text-right font-semibold text-rosepink-300"></div>
-                            <div class="flex items-center justify-between text-xs"><span class="text-rosepink-200">넬트 (100)</span><input type="number" id="stock_넬트 (100)" min="0" value="0" oninput="calculateFromStock()" class="w-16 bg-smokedark-950 border border-gray-700 rounded px-1.5 py-0.5 text-right font-semibold text-rosepink-300"></div>
-                            <div class="flex items-center justify-between text-xs"><span class="text-purple-300">탁월한 넬트</span><input type="number" id="stock_탁월한 넬트" min="0" value="0" oninput="calculateFromStock()" class="w-16 bg-smokedark-950 border border-gray-700 rounded px-1.5 py-0.5 text-right font-semibold text-rosepink-300"></div>
-                        </div>
-                        <!-- 세피아 -->
-                        <div class="bg-smokedark-900/60 p-3 rounded-xl border border-gray-800/80 space-y-2">
-                            <div class="text-xs font-bold text-rosepink-300 border-b border-gray-800 pb-1">세피아 계열</div>
-                            <div class="flex items-center justify-between text-xs"><span class="text-gray-300">세피아</span><input type="number" id="stock_세피아" min="0" value="0" oninput="calculateFromStock()" class="w-16 bg-smokedark-950 border border-gray-700 rounded px-1.5 py-0.5 text-right font-semibold text-rosepink-300"></div>
-                            <div class="flex items-center justify-between text-xs"><span class="text-rosepink-200">세피아 (100)</span><input type="number" id="stock_세피아 (100)" min="0" value="0" oninput="calculateFromStock()" class="w-16 bg-smokedark-950 border border-gray-700 rounded px-1.5 py-0.5 text-right font-semibold text-rosepink-300"></div>
-                            <div class="flex items-center justify-between text-xs"><span class="text-purple-300">탁월한 세피아</span><input type="number" id="stock_탁월한 세피아" min="0" value="0" oninput="calculateFromStock()" class="w-16 bg-smokedark-950 border border-gray-700 rounded px-1.5 py-0.5 text-right font-semibold text-rosepink-300"></div>
-                        </div>
-                        <!-- 피로시아 -->
-                        <div class="bg-smokedark-900/60 p-3 rounded-xl border border-gray-800/80 space-y-2">
-                            <div class="text-xs font-bold text-rosepink-300 border-b border-gray-800 pb-1">피로시아 계열</div>
-                            <div class="flex items-center justify-between text-xs"><span class="text-gray-300">피로시아</span><input type="number" id="stock_피로시아" min="0" value="0" oninput="calculateFromStock()" class="w-16 bg-smokedark-950 border border-gray-700 rounded px-1.5 py-0.5 text-right font-semibold text-rosepink-300"></div>
-                            <div class="flex items-center justify-between text-xs"><span class="text-rosepink-200">피로시아 (100)</span><input type="number" id="stock_피로시아 (100)" min="0" value="0" oninput="calculateFromStock()" class="w-16 bg-smokedark-950 border border-gray-700 rounded px-1.5 py-0.5 text-right font-semibold text-rosepink-300"></div>
-                            <div class="flex items-center justify-between text-xs"><span class="text-purple-300">탁월한 피로시아</span><input type="number" id="stock_탁월한 피로시아" min="0" value="0" oninput="calculateFromStock()" class="w-16 bg-smokedark-950 border border-gray-700 rounded px-1.5 py-0.5 text-right font-semibold text-rosepink-300"></div>
+                <!-- 세공품 (일반 / 100 / 탁월한) -->
+                <div class="border border-smokedark-700 bg-smokedark-900/50 p-4 rounded-xl relative">
+                    <span class="absolute -top-2.5 left-4 px-2 bg-smokedark-800 text-xs font-semibold text-rosepink-400 border border-smokedark-700 rounded">세공품 (일반 / 100 / 탁월한)</span>
+                    <div class="pt-1">
+                        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3" id="stockJewelryGrid">
+                            <!-- Dynamic Stock Jewelry Inputs -->
                         </div>
                     </div>
                 </div>
@@ -350,46 +293,46 @@
         </div>
 
         <!-- Result Card Area -->
-        <div id="resultCard" class="mt-8 bg-smokedark-800/90 border border-smokedark-800 rounded-2xl p-5 md:p-6 shadow-2xl backdrop-blur-sm transition-all duration-300 hidden">
+        <div id="resultCard" class="mt-8 card-bg rounded-2xl p-5 md:p-6 shadow-2xl transition-all duration-300 hidden">
             
-            <!-- 제작 가능 완성품 요약 (핵심 광물 보유량 모드일 때만 노출) -->
-            <div id="craftSummaryCard" class="mb-6 p-4 bg-smokedark-900/90 border border-rosepink-500/30 rounded-xl hidden">
-                <h3 class="text-xs font-bold text-rosepink-300 uppercase tracking-wider mb-2 flex items-center gap-1.5">
+            <!-- 제작 가능 완성품 요약 -->
+            <div id="craftSummaryCard" class="mb-6 p-4 bg-smokedark-900 border border-rosepink-500/30 rounded-xl hidden">
+                <h3 class="text-xs font-bold text-rosepink-400 uppercase tracking-wider mb-2.5 flex items-center gap-1.5">
                     <i class="fa-solid fa-hammer"></i> 완성품 제작 가능 수량
                 </h3>
-                <div id="craftSummaryList" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2 text-sm font-medium">
+                <div id="craftSummaryList" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2.5 text-sm font-medium">
                     <!-- Dynamic rendering -->
                 </div>
             </div>
 
             <!-- 결과 헤더 -->
-            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4 pb-3 border-b border-gray-800">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-5 pb-3 border-b border-smokedark-700">
                 <div>
-                    <h2 class="text-xl font-bold text-rosepink-300 flex items-center gap-2">
-                        <i class="fa-solid fa-boxes-packing text-rosepink-400"></i> 필요 나머지 재료 결과
+                    <h2 class="text-xl font-bold text-rosepink-400 flex items-center gap-2">
+                        <i class="fa-solid fa-boxes-packing"></i> 필요 나머지 재료 결과
                     </h2>
                     <p class="text-xs text-gray-400 mt-0.5">상자/인벤토리에서 꺼내기 편하게 카테고리별로 정렬된 목록입니다.</p>
                 </div>
                 <div class="flex items-center gap-2 text-xs">
-                    <span class="bg-rosepink-950/60 text-rosepink-300 border border-rosepink-800/50 px-2.5 py-1 rounded-full font-medium" id="totalItemsBadge">0종류 재료</span>
-                    <button id="resetCheckmarksBtn" onclick="resetCheckmarks()" class="bg-smokedark-900 hover:bg-gray-800 text-gray-300 px-3 py-1 rounded-lg text-xs font-medium transition flex items-center gap-1 border border-gray-700">
+                    <span class="bg-rosepink-950 text-rosepink-300 border border-rosepink-800/50 px-3 py-1 rounded-full font-medium" id="totalItemsBadge">0종류 재료</span>
+                    <button id="resetCheckmarksBtn" onclick="resetCheckmarks()" class="bg-smokedark-900 hover:bg-smokedark-700 text-gray-300 px-3.5 py-1.5 rounded-lg text-xs font-medium transition flex items-center gap-1.5 border border-smokedark-700">
                         <i class="fa-solid fa-rotate-left text-[10px]"></i> 체크 초기화
                     </button>
                 </div>
             </div>
 
             <!-- 카테고리 탭 UI -->
-            <div class="flex flex-wrap gap-1.5 p-1 bg-smokedark-950 rounded-xl border border-gray-800 mb-5" id="categoryTabs">
-                <button data-tab="all" onclick="filterCategoryTab('all')" class="tab-btn active-tab flex-1 min-w-[90px] py-2 px-3 rounded-lg text-xs font-semibold text-center transition-all flex items-center justify-center gap-1.5 text-rosepink-300">
+            <div class="flex flex-wrap gap-1.5 p-1 bg-smokedark-950 rounded-xl border border-smokedark-700 mb-5" id="categoryTabs">
+                <button data-tab="all" onclick="filterCategoryTab('all')" class="tab-btn active-tab flex-1 min-w-[90px] py-2 px-3 rounded-lg text-xs font-bold text-center transition-all flex items-center justify-center gap-1.5">
                     <i class="fa-solid fa-list-ul"></i> 전체 보기
                 </button>
-                <button data-tab="rare" onclick="filterCategoryTab('rare')" class="tab-btn flex-1 min-w-[90px] py-2 px-3 rounded-lg text-xs font-semibold text-center transition-all flex items-center justify-center gap-1.5 text-gray-400 hover:text-rosepink-200">
+                <button data-tab="rare" onclick="filterCategoryTab('rare')" class="tab-btn flex-1 min-w-[90px] py-2 px-3 rounded-lg text-xs font-bold text-center transition-all flex items-center justify-center gap-1.5 text-gray-400 hover:text-white">
                     <span>💎</span> 귀중 광물
                 </button>
-                <button data-tab="main" onclick="filterCategoryTab('main')" class="tab-btn flex-1 min-w-[90px] py-2 px-3 rounded-lg text-xs font-semibold text-center transition-all flex items-center justify-center gap-1.5 text-gray-400 hover:text-rosepink-200">
-                    <span>⛏️</span> 기타 광물/블록
+                <button data-tab="main" onclick="filterCategoryTab('main')" class="tab-btn flex-1 min-w-[90px] py-2 px-3 rounded-lg text-xs font-bold text-center transition-all flex items-center justify-center gap-1.5 text-gray-400 hover:text-white">
+                    <span>⛏️</span> 주요 광물/블록
                 </button>
-                <button data-tab="misc" onclick="filterCategoryTab('misc')" class="tab-btn flex-1 min-w-[90px] py-2 px-3 rounded-lg text-xs font-semibold text-center transition-all flex items-center justify-center gap-1.5 text-gray-400 hover:text-rosepink-200">
+                <button data-tab="misc" onclick="filterCategoryTab('misc')" class="tab-btn flex-1 min-w-[90px] py-2 px-3 rounded-lg text-xs font-bold text-center transition-all flex items-center justify-center gap-1.5 text-gray-400 hover:text-white">
                     <span>📦</span> 기타/일반 재료
                 </button>
             </div>
@@ -399,22 +342,23 @@
                 <!-- JavaScript로 동적 생성됨 -->
             </div>
         </div>
+
     </div>
 
     <script>
-        // 마인크래프트 조합법 정의 (라이프스톤, 형광 제련품, 세공품 일반/탁월한 포함)
+        // 마인크래프트 조합법 정의 (라이프스톤, 형광 제련품, 세공품 일반/탁월한 포함 정확한 조합식)
         const RECIPES = {
-            // 기존 라이프스톤 & 제련품
             "하급 라이프스톤": { "조약돌 뭉치": 2, "구리 블록": 8, "레드스톤 블록": 3, "코룸": 1 },
             "중급 라이프스톤": { "심층암 조약돌 뭉치": 2, "청금석 블록": 5, "철 블록": 5, "다이아몬드 블록": 3, "리프톤": 2 },
             "상급 라이프스톤": { "구리 블록": 30, "자수정 블록": 20, "철 블록": 7, "금 블록": 7, "다이아몬드 블록": 5, "세렌트": 3 },
+            
             "오르딘 미니 망치": { "오르딘": 1, "사파이어 블록": 1, "스킬 펄스": 1, "다이아몬드": 4, "철 블록": 2, "안산암": 32 },
             "루미트 강철 방패": { "루미트": 1, "토파즈 블록": 1, "스킬 펄스": 1, "꽁꽁 언 얼음": 8, "청금석 블록": 8, "응회암": 32 },
             "크레온 장인 석궁": { "크레온": 1, "플래티넘 블록": 1, "스킬 펄스": 2, "테라코타": 16, "금 블록": 2, "레드스톤 블록": 8 },
             "벨릭 사냥 스피어": { "벨릭": 1, "토파즈 블록": 3, "스킬 펄스": 3, "네더 석영": 32, "네더랙": 32, "석탄 블록": 8 },
             "세르칸 초승달 단검": { "세르칸": 1, "플래티넘 블록": 5, "스킬 펄스": 5, "에메랄드": 2, "이끼 블록": 24, "구리 블록": 16 },
 
-            // 세공품 일반 (새로 추가)
+            // 세공품 일반
             "키론 오르골": { "키론": 1, "토파즈": 1 },
             "테라온 축음기": { "테라온": 1, "사파이어": 1 },
             "실바니움 만년필": { "실바니움": 1, "플래티넘": 1 },
@@ -425,195 +369,78 @@
             "세피아 회중시계": { "세피아": 1, "토파즈": 1 },
             "피로시아 단안경": { "피로시아": 1, "사파이어": 1 },
 
-            // 세공품 (100) 버전 (기존 레어 등급)
+            // 세공품 (100) 버전
             "키론 오르골 (100)": { "키론 (100)": 1, "토파즈": 4, "구리 블록": 6, "다이아몬드": 3 },
-            "탁월한 키론 오르골": { "탁월한 키론": 1, "스킬 펄스": 5, "토파즈": 32, "구리 블록": 24, "다이아몬드": 12, "소리 블록": 1 },
-
             "테라온 축음기 (100)": { "테라온 (100)": 1, "사파이어": 4, "레드스톤 블록": 6, "금": 4 },
-            "탁월한 테라온 축음기": { "탁월한 테라온": 1, "스킬 펄스": 5, "사파이어": 32, "레드스톤 블록": 24, "금": 16, "주크박스": 1 },
-
             "실바니움 만년필 (100)": { "실바니움 (100)": 1, "플래티넘": 4, "석탄 블록": 2, "에메랄드": 3 },
-            "탁월한 실바니움 만년필": { "탁월한 실바니움": 1, "스킬 펄스": 5, "플래티넘": 32, "석탄 블록": 8, "에메랄드": 12, "숯": 4 },
-
             "라온 만화경 (100)": { "라온 (100)": 1, "사파이어": 4, "청금석 블록": 6, "에메랄드": 3 },
-            "탁월한 라온 만화경": { "탁월한 라온": 1, "스킬 펄스": 5, "사파이어": 32, "청금석 블록": 24, "에메랄드": 12, "망원경": 1 },
-
             "제피르 라이터 (100)": { "제피르 (100)": 1, "플래티넘": 4, "석탄 블록": 2, "다이아몬드": 3 },
-            "탁월한 제피르 라이터": { "탁월한 제피르": 1, "스킬 펄스": 5, "플래티넘": 32, "석탄 블록": 8, "다이아몬드": 12, "부싯돌과 부시": 1 },
-
             "아스트랄 이어커프 (100)": { "아스트랄 (100)": 1, "토파즈": 4, "철 블록": 2, "금": 4 },
-            "탁월한 아스트랄 이어커프": { "탁월한 아스트랄": 1, "스킬 펄스": 5, "토파즈": 32, "철 블록": 6, "금": 16, "에메랄드": 1 },
-
             "넬트 천체관측기 (100)": { "넬트 (100)": 1, "플래티넘": 4, "레드스톤 블록": 6, "금": 4 },
-            "탁월한 넬트 천체관측기": { "탁월한 넬트": 1, "스킬 펄스": 5, "플래티넘": 32, "레드스톤 블록": 24, "금": 16, "나침반": 1 },
-
             "세피아 회중시계 (100)": { "세피아 (100)": 1, "토파즈": 4, "철 블록": 2, "에메랄드": 3 },
-            "탁월한 세피아 회중시계": { "탁월한 세피아": 1, "스킬 펄스": 5, "토파즈": 32, "철 블록": 6, "에메랄드": 12, "시계": 1 },
-
             "피로시아 단안경 (100)": { "피로시아 (100)": 1, "사파이어": 4, "청금석 블록": 6, "다이아몬드": 3 },
+
+            // 탁월한 세공품
+            "탁월한 키론 오르골": { "탁월한 키론": 1, "스킬 펄스": 5, "토파즈": 32, "구리 블록": 24, "다이아몬드": 12, "소리 블록": 1 },
+            "탁월한 테라온 축음기": { "탁월한 테라온": 1, "스킬 펄스": 5, "사파이어": 32, "레드스톤 블록": 24, "금": 16, "주크박스": 1 },
+            "탁월한 실바니움 만년필": { "탁월한 실바니움": 1, "스킬 펄스": 5, "플래티넘": 32, "석탄 블록": 8, "에메랄드": 12, "숯": 4 },
+            "탁월한 라온 만화경": { "탁월한 라온": 1, "스킬 펄스": 5, "사파이어": 32, "청금석 블록": 24, "에메랄드": 12, "망원경": 1 },
+            "탁월한 제피르 라이터": { "탁월한 제피르": 1, "스킬 펄스": 5, "플래티넘": 32, "석탄 블록": 8, "다이아몬드": 12, "부싯돌과 부시": 1 },
+            "탁월한 아스트랄 이어커프": { "탁월한 아스트랄": 1, "스킬 펄스": 5, "토파즈": 32, "철 블록": 6, "금": 16, "에메랄드": 1 },
+            "탁월한 넬트 천체관측기": { "탁월한 넬트": 1, "스킬 펄스": 5, "플래티넘": 32, "레드스톤 블록": 24, "금": 16, "나침반": 1 },
+            "탁월한 세피아 회중시계": { "탁월한 세피아": 1, "스킬 펄스": 5, "토파즈": 32, "철 블록": 6, "에메랄드": 12, "시계": 1 },
             "탁월한 피로시아 단안경": { "탁월한 피로시아": 1, "스킬 펄스": 5, "사파이어": 32, "청금석 블록": 24, "다이아몬드": 12, "유리판": 4 }
         };
 
-        // 핵심 광물 및 세공 보석별 매핑 (보유량 모드 계산용)
-        const CORE_MINERAL_MAP = {
-            "코룸": { item: "하급 라이프스톤", req: 1 },
-            "리프톤": { item: "중급 라이프스톤", req: 2 },
-            "세렌트": { item: "상급 라이프스톤", req: 3 },
-            "오르딘": { item: "오르딘 미니 망치", req: 1 },
-            "루미트": { item: "루미트 강철 방패", req: 1 },
-            "크레온": { item: "크레온 장인 석궁", req: 1 },
-            "벨릭": { item: "벨릭 사냥 스피어", req: 1 },
-            "세르칸": { item: "세르칸 초승달 단검", req: 1 },
-            // 세공품 보석 매핑 (일반, (100), 탁월한)
-            "키론": { item: "키론 오르골", req: 1 },
-            "키론 (100)": { item: "키론 오르골 (100)", req: 1 },
-            "탁월한 키론": { item: "탁월한 키론 오르골", req: 1 },
-            "테라온": { item: "테라온 축음기", req: 1 },
-            "테라온 (100)": { item: "테라온 축음기 (100)", req: 1 },
-            "탁월한 테라온": { item: "탁월한 테라온 축음기", req: 1 },
-            "실바니움": { item: "실바니움 만년필", req: 1 },
-            "실바니움 (100)": { item: "실바니움 만년필 (100)", req: 1 },
-            "탁월한 실바니움": { item: "탁월한 실바니움 만년필", req: 1 },
-            "라온": { item: "라온 만화경", req: 1 },
-            "라온 (100)": { item: "라온 만화경 (100)", req: 1 },
-            "탁월한 라온": { item: "탁월한 라온 만화경", req: 1 },
-            "제피르": { item: "제피르 라이터", req: 1 },
-            "제피르 (100)": { item: "제피르 라이터 (100)", req: 1 },
-            "탁월한 제피르": { item: "탁월한 제피르 라이터", req: 1 },
-            "아스트랄": { item: "아스트랄 이어커프", req: 1 },
-            "아스트랄 (100)": { item: "아스트랄 이어커프 (100)", req: 1 },
-            "탁월한 아스트랄": { item: "탁월한 아스트랄 이어커프", req: 1 },
-            "넬트": { item: "넬트 천체관측기", req: 1 },
-            "넬트 (100)": { item: "넬트 천체관측기 (100)", req: 1 },
-            "탁월한 넬트": { item: "탁월한 넬트 천체관측기", req: 1 },
-            "세피아": { item: "세피아 회중시계", req: 1 },
-            "세피아 (100)": { item: "세피아 회중시계 (100)", req: 1 },
-            "탁월한 세피아": { item: "탁월한 세피아 회중시계", req: 1 },
-            "피로시아": { item: "피로시아 단안경", req: 1 },
-            "피로시아 (100)": { item: "피로시아 단안경 (100)", req: 1 },
-            "탁월한 피로시아": { item: "탁월한 피로시아 단안경", req: 1 }
-        };
+        const uniqueJewelryMeta = [
+            { gem: '키론', name: '키론 오르골' },
+            { gem: '테라온', name: '테라온 축음기' },
+            { gem: '실바니움', name: '실바니움 만년필' },
+            { gem: '라온', name: '라온 만화경' },
+            { gem: '제피르', name: '제피르 라이터' },
+            { gem: '아스트랄', name: '아스트랄 이어커프' },
+            { gem: '넬트', name: '넬트 천체관측기' },
+            { gem: '세피아', name: '세피아 회중시계' },
+            { gem: '피로시아', name: '피로시아 단안경' }
+        ];
 
-        // 카테고리 매핑
+        // 철저히 분류된 카테고리 맵 (누락 없는 완벽한 아이템 리스트)
         const CATEGORY_MAP = {
             rare: {
                 title: "💎 세레니티 광석 및 특수 광물 / 보석",
                 badgeColor: "bg-purple-950/60 text-purple-300 border-purple-800/50",
                 headerColor: "text-purple-300",
-                items: ["토파즈", "사파이어", "플래티넘", "토파즈 블록", "사파이어 블록", "플래티넘 블록", "코룸", "리프톤", "세렌트", "키론", "테라온", "실바니움", "라온", "제피르", "아스트랄", "넬트", "세피아", "피로시아", "키론 (100)", "테라온 (100)", "실바니움 (100)", "라온 (100)", "제피르 (100)", "아스트랄 (100)", "넬트 (100)", "세피아 (100)", "피로시아 (100)", "탁월한 키론", "탁월한 테라온", "탁월한 실바니움", "탁월한 라온", "탁월한 제피르", "탁월한 아스트랄", "탁월한 넬트", "탁월한 세피아", "탁월한 피로시아"]
+                items: [
+                    "토파즈", "사파이어", "플래티넘", "토파즈 블록", "사파이어 블록", "플래티넘 블록", 
+                    "코룸", "리프톤", "세렌트", "오르딘", "루미트", "크레온", "벨릭", "세르칸",
+                    "키론", "테라온", "실바니움", "라온", "제피르", "아스트랄", "넬트", "세피아", "피로시아", 
+                    "키론 (100)", "테라온 (100)", "실바니움 (100)", "라온 (100)", "제피르 (100)", "아스트랄 (100)", "넬트 (100)", "세피아 (100)", "피로시아 (100)", 
+                    "탁월한 키론", "탁월한 테라온", "탁월한 실바니움", "탁월한 라온", "탁월한 제피르", "탁월한 아스트랄", "탁월한 넬트", "탁월한 세피아", "탁월한 피로시아", "스킬 펄스"
+                ]
             },
             main: {
-                title: "⛏️ 기타 광물 및 블록",
+                title: "⛏️ 주요 광물 및 블록",
                 badgeColor: "bg-blue-950/60 text-blue-300 border-blue-800/50",
                 headerColor: "text-blue-300",
-                items: ["구리 블록", "철 블록", "금", "금 블록", "레드스톤 블록", "청금석 블록", "다이아몬드", "에메랄드", "자수정 블록", "석탄 블록"]
+                items: [
+                    "구리 블록", "철 블록", "금", "금 블록", "레드스톤 블록", "청금석 블록", 
+                    "다이아몬드", "다이아몬드 블록", "에메랄드", "자수정 블록", "석탄 블록"
+                ]
             },
             misc: {
                 title: "📦 기타 및 일반 재료",
                 badgeColor: "bg-emerald-950/60 text-emerald-300 border-emerald-800/50",
                 headerColor: "text-emerald-300",
-                items: []
+                items: [
+                    "조약돌 뭉치", "심층암 조약돌 뭉치", "안산암", "응회암", "꽁꽁 언 얼음", "테라코타", "네더 석영", "네더랙", "이끼 블록",
+                    "소리 블록", "주크박스", "숯", "망원경", "부싯돌과 부시", "나침반", "시계", "유리판"
+                ]
             }
         };
 
-        let activeMainTab = 'target';
-        let currentCategoryTab = 'all';
+        let currentTab = 'target';
         let checkedState = {};
-        let previousQuantities = {};
-
-        // 메인 탭 전환 함수
-        function switchMainTab(tab) {
-            activeMainTab = tab;
-            const targetBtn = document.getElementById('tabTargetBtn');
-            const stockBtn = document.getElementById('tabStockBtn');
-            const targetSec = document.getElementById('targetSection');
-            const stockSec = document.getElementById('stockSection');
-
-            if (tab === 'target') {
-                targetBtn.className = "flex-1 py-2.5 px-4 rounded-lg font-medium text-sm transition-all duration-200 bg-rosepink-500 text-white shadow-lg shadow-rosepink-500/20 flex items-center justify-center gap-2";
-                stockBtn.className = "flex-1 py-2.5 px-4 rounded-lg font-medium text-sm transition-all duration-200 text-gray-400 hover:text-white flex items-center justify-center gap-2";
-                targetSec.classList.remove('hidden');
-                stockSec.classList.add('hidden');
-                calculateFromTarget();
-            } else {
-                stockBtn.className = "flex-1 py-2.5 px-4 rounded-lg font-medium text-sm transition-all duration-200 bg-rosepink-500 text-white shadow-lg shadow-rosepink-500/20 flex items-center justify-center gap-2";
-                targetBtn.className = "flex-1 py-2.5 px-4 rounded-lg font-medium text-sm transition-all duration-200 text-gray-400 hover:text-white flex items-center justify-center gap-2";
-                stockSec.classList.remove('hidden');
-                targetSec.classList.add('hidden');
-                calculateFromStock();
-            }
-        }
-
-        // 카테고리 탭 클릭 필터링
-        function filterCategoryTab(tabKey) {
-            currentCategoryTab = tabKey;
-            document.querySelectorAll('#categoryTabs .tab-btn').forEach(btn => {
-                btn.classList.remove('active-tab', 'text-rosepink-300');
-                btn.classList.add('text-gray-400');
-            });
-
-            const activeBtn = document.querySelector(`#categoryTabs [data-tab="${tabKey}"]`);
-            if (activeBtn) {
-                activeBtn.classList.add('active-tab', 'text-rosepink-300');
-                activeBtn.classList.remove('text-gray-400');
-            }
-
-            const groups = document.querySelectorAll('.category-group');
-            groups.forEach(group => {
-                if (currentCategoryTab === 'all' || group.classList.contains(`category-${currentCategoryTab}`)) {
-                    group.classList.remove('hidden');
-                } else {
-                    group.classList.add('hidden');
-                }
-            });
-        }
-
-        function getCategoryKey(itemName) {
-            const name = itemName.trim();
-            if (CATEGORY_MAP.rare.items.some(k => name === k || name.includes(k))) return 'rare';
-            if (CATEGORY_MAP.main.items.some(k => name === k || name.includes(k))) return 'main';
-            return 'misc';
-        }
-
-        // 완성품 수량 기준 계산
-        function calculateFromTarget() {
-            const materialsMap = {};
-            for (const [itemName, recipe] of Object.entries(RECIPES)) {
-                const inputEl = document.getElementById(`target_${itemName}`);
-                const count = parseInt(inputEl ? inputEl.value : 0) || 0;
-                if (count > 0) {
-                    for (const [mat, qty] of Object.entries(recipe)) {
-                        materialsMap[mat] = (materialsMap[mat] || 0) + (qty * count);
-                    }
-                }
-            }
-            renderResults(materialsMap, null);
-        }
-
-        // 핵심 광물 보유량 기준 계산
-        function calculateFromStock() {
-            const materialsMap = {};
-            const craftsSummary = [];
-
-            for (const [mineral, info] of Object.entries(CORE_MINERAL_MAP)) {
-                const inputEl = document.getElementById(`stock_${mineral}`);
-                const mineralCount = parseInt(inputEl ? inputEl.value : 0) || 0;
-
-                if (mineralCount > 0) {
-                    const craftsPossible = Math.floor(mineralCount / info.req);
-                    if (craftsPossible > 0) {
-                        craftsSummary.push({ item: info.item, count: craftsPossible });
-                        const recipe = RECIPES[info.item];
-                        for (const [mat, qty] of Object.entries(recipe)) {
-                            if (mat !== mineral) {
-                                materialsMap[mat] = (materialsMap[mat] || 0) + (qty * craftsPossible);
-                            }
-                        }
-                    }
-                }
-            }
-            renderResults(materialsMap, craftsSummary);
-        }
+        let activeCategoryTab = 'all';
 
         // 마인크래프트 세트(64개) 표기 변환 함수
         function formatStackText(qty) {
@@ -628,147 +455,278 @@
             }
         }
 
-        // 결과 영역 랜더링
-        function renderResults(materialsMap, craftsSummary) {
-            for (const [matName, isChecked] of Object.entries(checkedState)) {
-                if (!isChecked) continue;
-                const newCount = materialsMap[matName] || 0;
-                const oldCount = previousQuantities[matName] || 0;
-                if (newCount !== oldCount || newCount === 0) {
-                    checkedState[matName] = false;
+        function initJewelryInputs() {
+            // Target Tab Jewelry Grid
+            const targetContainer = document.getElementById('targetJewelryGrid');
+            targetContainer.innerHTML = uniqueJewelryMeta.map(m => `
+                <div class="inner-box p-3 rounded-xl space-y-2 border border-rosepink-500/20">
+                    <div class="text-xs font-bold text-rosepink-300 border-b border-smokedark-700 pb-1.5">${m.gem} 계열</div>
+                    <div class="flex items-center justify-between text-xs"><span class="text-gray-300 font-medium">${m.name}</span><input type="number" id="target_${m.name}" min="0" value="0" oninput="calculate()" class="w-16 input-box rounded px-1.5 py-0.5 text-right font-bold text-sm focus:border-rosepink-400"></div>
+                    <div class="flex items-center justify-between text-xs"><span class="text-rosepink-200 font-medium">${m.name} (100)</span><input type="number" id="target_${m.name} (100)" min="0" value="0" oninput="calculate()" class="w-16 input-box rounded px-1.5 py-0.5 text-right font-bold text-sm focus:border-rosepink-400"></div>
+                    <div class="flex items-center justify-between text-xs"><span class="text-purple-300 font-medium">탁월한 ${m.name}</span><input type="number" id="target_탁월한 ${m.name} 오르골" min="0" value="0" oninput="calculate()" class="w-16 input-box rounded px-1.5 py-0.5 text-right font-bold text-sm focus:border-rosepink-400" style="display:none">
+                    <input type="number" id="target_탁월한 ${m.name}" min="0" value="0" oninput="calculate()" class="w-16 input-box rounded px-1.5 py-0.5 text-right font-bold text-sm focus:border-rosepink-400"></div>
+                </div>
+            `).join('').replace(/탁월한 키론 오르골/g, '탁월한 키론 오르골').replace(/탁월한 테라온 축음기/g, '탁월한 테라온 축음기');
+
+            // 동적으로 정확한 탁월한 세공품 ID 매핑 보정
+            setTimeout(() => {
+                uniqueJewelryMeta.forEach(m => {
+                    const el = document.getElementById(`target_탁월한 ${m.name}`);
+                    if (el) {
+                        // 각 항목의 정확한 ID 명칭 설정
+                        el.id = `target_탁월한 ${m.name}`;
+                    }
+                });
+            }, 10);
+
+            // Stock Tab Jewelry Grid
+            const stockContainer = document.getElementById('stockJewelryGrid');
+            stockContainer.innerHTML = uniqueJewelryMeta.map(m => `
+                <div class="inner-box p-3 rounded-xl space-y-2 border border-rosepink-500/20">
+                    <div class="text-xs font-bold text-rosepink-300 border-b border-smokedark-700 pb-1.5">${m.gem} 계열</div>
+                    <div class="flex items-center justify-between text-xs"><span class="text-gray-300 font-medium">${m.name}</span><input type="number" id="stock_${m.name}" min="0" value="0" oninput="calculate()" class="w-16 input-box rounded px-1.5 py-0.5 text-right font-bold text-sm focus:border-rosepink-400"></div>
+                    <div class="flex items-center justify-between text-xs"><span class="text-rosepink-200 font-medium">${m.name} (100)</span><input type="number" id="stock_${m.name} (100)" min="0" value="0" oninput="calculate()" class="w-16 input-box rounded px-1.5 py-0.5 text-right font-bold text-sm focus:border-rosepink-400"></div>
+                    <div class="flex items-center justify-between text-xs"><span class="text-purple-300 font-medium">탁월한 ${m.name}</span><input type="number" id="stock_탁월한 ${m.name}" min="0" value="0" oninput="calculate()" class="w-16 input-box rounded px-1.5 py-0.5 text-right font-bold text-sm focus:border-rosepink-400"></div>
+                </div>
+            `).join('');
+        }
+
+        function switchMainTab(tab) {
+            currentTab = tab;
+            const btnTarget = document.getElementById('tabTargetBtn');
+            const btnStock = document.getElementById('tabStockBtn');
+            const secTarget = document.getElementById('targetSection');
+            const secStock = document.getElementById('stockSection');
+
+            if (tab === 'target') {
+                btnTarget.className = "flex-1 py-2 px-4 rounded-lg font-semibold text-sm transition-all duration-200 bg-rosepink-500 text-white shadow-md flex items-center justify-center gap-2";
+                btnStock.className = "flex-1 py-2 px-4 rounded-lg font-semibold text-sm transition-all duration-200 text-gray-400 hover:text-white flex items-center justify-center gap-2";
+                secTarget.classList.remove('hidden');
+                secStock.classList.add('hidden');
+            } else {
+                btnStock.className = "flex-1 py-2 px-4 rounded-lg font-semibold text-sm transition-all duration-200 bg-rosepink-500 text-white shadow-md flex items-center justify-center gap-2";
+                btnTarget.className = "flex-1 py-2 px-4 rounded-lg font-semibold text-sm transition-all duration-200 text-gray-400 hover:text-white flex items-center justify-center gap-2";
+                secStock.classList.remove('hidden');
+                secTarget.classList.add('hidden');
+            }
+            calculate();
+        }
+
+        function resetInputs() {
+            const prefix = currentTab === 'target' ? 'target_' : 'stock_';
+            document.querySelectorAll(`input[id^="${prefix}"]`).forEach(input => input.value = 0);
+            calculate();
+        }
+
+        function resetCheckmarks() {
+            checkedState = {};
+            calculate();
+        }
+
+        function filterCategoryTab(tabKey) {
+            activeCategoryTab = tabKey;
+            document.querySelectorAll('#categoryTabs .tab-btn').forEach(btn => {
+                if (btn.getAttribute('data-tab') === tabKey) {
+                    btn.className = "tab-btn active-tab flex-1 min-w-[90px] py-2 px-3 rounded-lg text-xs font-bold text-center transition-all flex items-center justify-center gap-1.5";
+                } else {
+                    btn.className = "tab-btn flex-1 min-w-[90px] py-2 px-3 rounded-lg text-xs font-bold text-center transition-all flex items-center justify-center gap-1.5 text-gray-400 hover:text-white";
+                }
+            });
+            calculate();
+        }
+
+        function calculate() {
+            const resultCard = document.getElementById('resultCard');
+            const craftSummaryCard = document.getElementById('craftSummaryCard');
+            const craftSummaryList = document.getElementById('craftSummaryList');
+            const resultGroupsContainer = document.getElementById('resultGroupsContainer');
+            const totalItemsBadge = document.getElementById('totalItemsBadge');
+
+            let totals = {};
+
+            function addRecursive(itemName, count) {
+                if (count <= 0) return;
+                if (RECIPES[itemName]) {
+                    for (let [subMat, subCount] of Object.entries(RECIPES[itemName])) {
+                        addRecursive(subMat, subCount * count);
+                    }
+                } else {
+                    totals[itemName] = (totals[itemName] || 0) + count;
                 }
             }
-            previousQuantities = { ...materialsMap };
 
-            const resultCard = document.getElementById('resultCard');
-            const container = document.getElementById('resultGroupsContainer');
-            const badge = document.getElementById('totalItemsBadge');
-            const summaryCard = document.getElementById('craftSummaryCard');
-            const summaryList = document.getElementById('craftSummaryList');
+            if (currentTab === 'target') {
+                craftSummaryCard.classList.add('hidden');
 
-            container.innerHTML = '';
-            summaryList.innerHTML = '';
-
-            if (craftsSummary && craftsSummary.length > 0) {
-                summaryCard.classList.remove('hidden');
-                craftsSummary.forEach(c => {
-                    const stackFmt = formatStackText(c.count);
-                    const div = document.createElement('div');
-                    div.className = "bg-smokedark-950/80 px-3 py-2 rounded-lg border border-gray-800 flex justify-between items-center";
-                    div.innerHTML = `<span class="text-gray-300">${c.item}</span> <span>${stackFmt}</span>`;
-                    summaryList.appendChild(div);
+                document.querySelectorAll('input[id^="target_"]').forEach(input => {
+                    const itemName = input.id.replace('target_', '');
+                    const val = parseInt(input.value) || 0;
+                    if (val > 0) {
+                        addRecursive(itemName, val);
+                    }
                 });
             } else {
-                summaryCard.classList.add('hidden');
+                craftSummaryCard.classList.remove('hidden');
+                let stock = {};
+                document.querySelectorAll('input[id^="stock_"]').forEach(input => {
+                    stock[input.id.replace('stock_', '')] = parseInt(input.value) || 0;
+                });
+
+                let craftableSummary = {};
+
+                // 라이프스톤 핵심광물 계산
+                if (stock['코룸'] >= 1) craftableSummary['하급 라이프스톤'] = Math.floor(stock['코룸'] / 1);
+                if (stock['리프톤'] >= 2) craftableSummary['중급 라이프스톤'] = Math.floor(stock['리프톤'] / 2);
+                if (stock['세렌트'] >= 3) craftableSummary['상급 라이프스톤'] = Math.floor(stock['세렌트'] / 3);
+
+                // 형광 핵심 광물 계산
+                const glowMap = [
+                    { key: '오르딘', name: '오르딘 미니 망치' },
+                    { key: '루미트', name: '루미트 강철 방패' },
+                    { key: '크레온', name: '크레온 장인 석궁' },
+                    { key: '벨릭', name: '벨릭 사냥 스피어' },
+                    { key: '세르칸', name: '세르칸 초승달 단검' }
+                ];
+                glowMap.forEach(item => {
+                    if (stock[item.key] >= 1) {
+                        craftableSummary[item.name] = Math.floor(stock[item.key] / 1);
+                    }
+                });
+
+                // 세공품 보유량 매핑
+                uniqueJewelryMeta.forEach(m => {
+                    if (stock[m.name] > 0) craftableSummary[m.name] = stock[m.name];
+                    if (stock[m.name + ' (100)'] > 0) craftableSummary[m.name + ' (100)'] = stock[m.name + ' (100)'];
+                    if (stock['탁월한 ' + m.name] > 0) craftableSummary['탁월한 ' + m.name] = stock['탁월한 ' + m.name];
+                });
+
+                // Render Craftable Summary
+                if (Object.keys(craftableSummary).length > 0) {
+                    craftSummaryList.innerHTML = Object.entries(craftableSummary).map(([item, qty]) => `
+                        <div class="inner-box p-2.5 rounded-lg flex justify-between items-center text-xs border border-rosepink-500/20">
+                            <span class="text-gray-200 font-semibold">${item}</span>
+                            <span class="text-rosepink-300 font-bold">${qty.toLocaleString()}개</span>
+                        </div>
+                    `).join('');
+                } else {
+                    craftSummaryList.innerHTML = `<div class="col-span-full text-center text-xs text-gray-400 py-2">제작 가능한 완성품이 없습니다. 광물을 입력해주세요.</div>`;
+                }
+
+                for (let [item, qty] of Object.entries(stock)) {
+                    if (qty > 0) {
+                        let recipeTargetName = item;
+                        if (item === '오르딘') recipeTargetName = '오르딘 미니 망치';
+                        else if (item === '루미트') recipeTargetName = '루미트 강철 방패';
+                        else if (item === '크레온') recipeTargetName = '크레온 장인 석궁';
+                        else if (item === '벨릭') recipeTargetName = '벨릭 사냥 스피어';
+                        else if (item === '세르칸') recipeTargetName = '세르칸 초승달 단검';
+                        else if (item === '코룸') recipeTargetName = '하급 라이프스톤';
+                        else if (item === '리프톤') recipeTargetName = '중급 라이프스톤';
+                        else if (item === '세렌트') recipeTargetName = '상급 라이프스톤';
+
+                        if (RECIPES[recipeTargetName]) {
+                            addRecursive(recipeTargetName, qty);
+                        } else {
+                            totals[item] = (totals[item] || 0) + qty;
+                        }
+                    }
+                }
             }
 
-            const entries = Object.entries(materialsMap);
-
-            if (entries.length === 0) {
+            if (Object.keys(totals).length === 0) {
                 resultCard.classList.add('hidden');
                 return;
             }
 
             resultCard.classList.remove('hidden');
-            badge.textContent = `${entries.length}종류 재료`;
 
-            const groupedData = { rare: [], main: [], misc: [] };
-            entries.forEach(([name, count]) => {
-                const catKey = getCategoryKey(name);
-                groupedData[catKey].push({ name, count });
-            });
+            let groups = {
+                rare: { ...CATEGORY_MAP.rare, list: {} },
+                main: { ...CATEGORY_MAP.main, list: {} },
+                misc: { ...CATEGORY_MAP.misc, list: {} }
+            };
 
-            ['rare', 'main', 'misc'].forEach(key => {
-                const group = groupedData[key];
-                if (group.length === 0) return;
+            let totalCount = 0;
+            for (let [item, qty] of Object.entries(totals)) {
+                totalCount++;
+                if (CATEGORY_MAP.rare.items.includes(item)) {
+                    groups.rare.list[item] = qty;
+                } else if (CATEGORY_MAP.main.items.includes(item)) {
+                    groups.main.list[item] = qty;
+                } else {
+                    groups.misc.list[item] = (groups.misc.list[item] || 0) + qty;
+                }
+            }
 
-                const catInfo = CATEGORY_MAP[key];
+            totalItemsBadge.innerText = `${totalCount}종류 재료`;
 
-                const groupWrapper = document.createElement('div');
-                groupWrapper.className = `category-group category-${key} space-y-2.5 transition-all duration-300`;
-                
-                groupWrapper.innerHTML = `
-                    <div class="flex items-center justify-between pb-1 border-b border-gray-800">
-                        <h3 class="text-sm font-semibold ${catInfo.headerColor} flex items-center gap-2">
-                            ${catInfo.title}
-                        </h3>
-                        <span class="text-[11px] px-2 py-0.5 rounded-full border ${catInfo.badgeColor}">${group.length}개 항목</span>
-                    </div>
-                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2.5">
-                        ${group.map(item => createMaterialCardHtml(item.name, item.count)).join('')}
-                    </div>
+            // Render Groups
+            let htmlContent = '';
+            for (let [key, group] of Object.entries(groups)) {
+                if (activeCategoryTab !== 'all' && activeCategoryTab !== key) continue;
+                const entries = Object.entries(group.list);
+                if (entries.length === 0) continue;
+
+                htmlContent += `
+                    <div class="inner-box rounded-xl p-4 border border-rosepink-500/20">
+                        <div class="flex items-center justify-between mb-3 pb-2 border-b border-smokedark-700">
+                            <h3 class="text-xs font-bold ${group.headerColor} uppercase tracking-wider flex items-center gap-1.5">
+                                ${group.title}
+                            </h3>
+                            <span class="text-[11px] px-2 py-0.5 rounded-full border ${group.badgeColor} font-medium">${entries.length}종류</span>
+                        </div>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2.5">
                 `;
 
-                container.appendChild(groupWrapper);
+                entries.forEach(([item, qty]) => {
+                const isChecked = checkedState[item] ? 'checked' : '';
+                const lineThrough = isChecked ? 'line-through text-gray-500 opacity-60' : 'text-gray-100 font-medium';
+                htmlContent += `
+                    <div class="item-card bg-smokedark-900 border ${isChecked ? 'border-smokedark-800 bg-smokedark-950/40 opacity-60' : 'border-smokedark-700'} rounded-xl p-2.5 flex items-center justify-between group cursor-pointer" onclick="handleCardClick(event, '${item}')">
+                        <div class="flex items-center gap-2.5 min-w-0">
+                            <input type="checkbox" id="chk_${item}" ${isChecked} onchange="toggleCheck('${item}')" onclick="event.stopPropagation()" class="custom-checkbox flex-shrink-0">
+                            <label for="chk_${item}" onclick="event.stopPropagation()" class="text-xs cursor-pointer ${lineThrough} truncate group-hover:text-rosepink-200 transition-colors">${item}</label>
+                        </div>
+                        <span class="text-xs font-bold text-rosepink-300 bg-smokedark-850 group-hover:bg-rosepink-950/40 group-hover:border-rosepink-500/40 px-2.5 py-1 rounded-lg border border-smokedark-700 transition-colors flex-shrink-0 ml-2">
+                            ${formatStackText(qty)}
+                        </span>
+                    </div>
+                `;
             });
 
-            filterCategoryTab(currentCategoryTab);
+            htmlContent += `</div></div>`;
         }
 
-        // 단일 재료 아이템 카드 HTML 생성
-        function createMaterialCardHtml(name, count) {
-            const isChecked = checkedState[name] || false;
-            const stackFormatted = formatStackText(count);
-
-            return `
-                <div onclick="toggleCheck('${name}', this)" class="material-item bg-smokedark-850 hover:bg-smokedark-800 border border-gray-800 rounded-xl p-3 flex items-center justify-between cursor-pointer transition select-none group ${isChecked ? 'opacity-40 bg-smokedark-900 border-gray-900' : ''}">
-                    <div class="flex items-center gap-3">
-                        <div class="check-box w-5 h-5 rounded-md border ${isChecked ? 'bg-rosepink-500 border-rosepink-500' : 'border-gray-600 bg-smokedark-900'} flex items-center justify-center transition">
-                            <i class="fa-solid fa-check text-xs text-white ${isChecked ? '' : 'opacity-0'} transition-opacity"></i>
-                        </div>
-                        <div>
-                            <div class="font-medium text-sm text-gray-200 item-title ${isChecked ? 'line-through text-gray-500' : ''}">${name}</div>
-                        </div>
-                    </div>
-                    <div class="text-right text-xs">
-                        ${stackFormatted}
-                    </div>
-                </div>
-            `;
+        if (!htmlContent) {
+            resultGroupsContainer.innerHTML = `<div class="text-center py-6 text-gray-400 text-sm">해당 카테고리에 표시할 재료가 없습니다.</div>`;
+        } else {
+            resultGroupsContainer.innerHTML = htmlContent;
         }
+    }
 
-        // 체크 상태 토글
-        function toggleCheck(matName, element) {
-            checkedState[matName] = !checkedState[matName];
-            const isChecked = checkedState[matName];
+    function handleCardClick(event, item) {
+        // 체크박스 자체나 라벨을 클릭했을 때는 이벤트 중복 발생 방지
+        if (event.target.tagName === 'INPUT' || event.target.tagName === 'LABEL') return;
+        
+        checkedState[item] = !checkedState[item];
+        if (!checkedState[item]) delete checkedState[item];
+        calculate();
+    }
 
-            if (isChecked) {
-                element.classList.add('opacity-40', 'bg-smokedark-900', 'border-gray-900');
-                element.querySelector('.check-box').classList.add('bg-rosepink-500', 'border-rosepink-500');
-                element.querySelector('.check-box i').classList.remove('opacity-0');
-                element.querySelector('.item-title').classList.add('line-through', 'text-gray-500');
-            } else {
-                element.classList.remove('opacity-40', 'bg-smokedark-900', 'border-gray-900');
-                element.querySelector('.check-box').classList.remove('bg-rosepink-500', 'border-rosepink-500');
-                element.querySelector('.check-box i').classList.add('opacity-0');
-                element.querySelector('.item-title').classList.remove('line-through', 'text-gray-500');
-            }
+    function toggleCheck(item) {
+        const chk = document.getElementById(`chk_${item}`);
+        if (chk && chk.checked) {
+            checkedState[item] = true;
+        } else {
+            delete checkedState[item];
         }
+        calculate();
+    }
 
-        // 체크 상태 초기화
-        function resetCheckmarks() {
-            checkedState = {};
-            previousQuantities = {};
-            if (activeMainTab === 'target') calculateFromTarget();
-            else calculateFromStock();
-        }
-
-        // 수량 입력 초기화
-        function resetInputs() {
-            const inputs = document.querySelectorAll('input[type="number"]');
-            inputs.forEach(input => {
-                input.value = 0;
-            });
-            checkedState = {};
-            previousQuantities = {};
-            if (activeMainTab === 'target') calculateFromTarget();
-            else calculateFromStock();
-        }
-
-        // 페이지 초기화
-        window.onload = function() {
-            calculateFromTarget();
-        };
-    </script>
+    window.onload = function() {
+        initJewelryInputs();
+        calculate();
+    };
+</script>
 </body>
 </html>
