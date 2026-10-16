@@ -121,23 +121,23 @@
                     </h2>
                     <div class="space-y-2.5">
                         <div class="flex items-center justify-between">
-                            <label class="text-xs text-gray-300 font-medium">오르딘</label>
+                            <label class="text-xs text-gray-300 font-medium">오르딘 미니 망치</label>
                             <input type="number" id="target_오르딘" min="0" value="0" oninput="calculateFromTarget()" class="w-20 bg-smokedark-900 border border-gray-700 rounded-lg px-2.5 py-1 text-right font-semibold text-rosepink-300 focus:outline-none focus:border-rosepink-400 transition text-sm">
                         </div>
                         <div class="flex items-center justify-between">
-                            <label class="text-xs text-gray-300 font-medium">루미트</label>
+                            <label class="text-xs text-gray-300 font-medium">루미트 강철 방패</label>
                             <input type="number" id="target_루미트" min="0" value="0" oninput="calculateFromTarget()" class="w-20 bg-smokedark-900 border border-gray-700 rounded-lg px-2.5 py-1 text-right font-semibold text-rosepink-300 focus:outline-none focus:border-rosepink-400 transition text-sm">
                         </div>
                         <div class="flex items-center justify-between">
-                            <label class="text-xs text-gray-300 font-medium">크레온</label>
+                            <label class="text-xs text-gray-300 font-medium">크레온 장인 석궁</label>
                             <input type="number" id="target_크레온" min="0" value="0" oninput="calculateFromTarget()" class="w-20 bg-smokedark-900 border border-gray-700 rounded-lg px-2.5 py-1 text-right font-semibold text-rosepink-300 focus:outline-none focus:border-rosepink-400 transition text-sm">
                         </div>
                         <div class="flex items-center justify-between">
-                            <label class="text-xs text-gray-300 font-medium">벨릭</label>
+                            <label class="text-xs text-gray-300 font-medium">벨릭 사냥 스피어</label>
                             <input type="number" id="target_벨릭" min="0" value="0" oninput="calculateFromTarget()" class="w-20 bg-smokedark-900 border border-gray-700 rounded-lg px-2.5 py-1 text-right font-semibold text-rosepink-300 focus:outline-none focus:border-rosepink-400 transition text-sm">
                         </div>
                         <div class="flex items-center justify-between">
-                            <label class="text-xs text-gray-300 font-medium">세르칸</label>
+                            <label class="text-xs text-gray-300 font-medium">세르칸 초승달 단검</label>
                             <input type="number" id="target_세르칸" min="0" value="0" oninput="calculateFromTarget()" class="w-20 bg-smokedark-900 border border-gray-700 rounded-lg px-2.5 py-1 text-right font-semibold text-rosepink-300 focus:outline-none focus:border-rosepink-400 transition text-sm">
                         </div>
                     </div>
@@ -147,7 +147,7 @@
             <!-- 세공품 (일반/탁월한 - 독립된 카드 섹션으로 분리) -->
             <div class="bg-smokedark-800/80 border border-smokedark-800 rounded-2xl p-5 shadow-xl">
                 <h2 class="text-base font-semibold text-rosepink-300 mb-3 flex items-center gap-2 border-b border-gray-800 pb-2">
-                    <i class="fa-solid fa-gem text-rosepink-400"></i> 세공품 (60/100/탁월한)
+                    <i class="fa-solid fa-gem text-rosepink-400"></i> 세공품
                 </h2>
                 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
                     <!-- 키론 -->
@@ -387,7 +387,7 @@
                     <span>💎</span> 귀중 광물
                 </button>
                 <button data-tab="main" onclick="filterCategoryTab('main')" class="tab-btn flex-1 min-w-[90px] py-2 px-3 rounded-lg text-xs font-semibold text-center transition-all flex items-center justify-center gap-1.5 text-gray-400 hover:text-rosepink-200">
-                    <span>⛏️</span> 주요 광물/블록
+                    <span>⛏️</span> 기타 광물/블록
                 </button>
                 <button data-tab="misc" onclick="filterCategoryTab('misc')" class="tab-btn flex-1 min-w-[90px] py-2 px-3 rounded-lg text-xs font-semibold text-center transition-all flex items-center justify-center gap-1.5 text-gray-400 hover:text-rosepink-200">
                     <span>📦</span> 기타/일반 재료
@@ -408,11 +408,11 @@
             "하급 라이프스톤": { "조약돌 뭉치": 2, "구리 블록": 8, "레드스톤 블록": 3, "코룸": 1 },
             "중급 라이프스톤": { "심층암 조약돌 뭉치": 2, "청금석 블록": 5, "철 블록": 5, "다이아몬드 블록": 3, "리프톤": 2 },
             "상급 라이프스톤": { "구리 블록": 30, "자수정 블록": 20, "철 블록": 7, "금 블록": 7, "다이아몬드 블록": 5, "세렌트": 3 },
-            "오르딘": { "오르딘": 1, "사파이어 블록": 1, "스킬 펄스": 1, "다이아몬드": 4, "철 블록": 2, "안산암": 32 },
-            "루미트": { "루미트": 1, "토파즈 블록": 1, "스킬 펄스": 1, "꽁꽁 언 얼음": 8, "청금석 블록": 8, "응회암": 32 },
-            "크레온": { "크레온": 1, "플래티넘 블록": 1, "스킬 펄스": 2, "테라코타": 16, "금 블록": 2, "레드스톤 블록": 8 },
-            "벨릭": { "벨릭": 1, "토파즈 블록": 3, "스킬 펄스": 3, "네더 석영": 32, "네더랙": 32, "석탄 블록": 8 },
-            "세르칸": { "세르칸": 1, "플래티넘 블록": 5, "스킬 펄스": 5, "에메랄드": 2, "이끼 블록": 24, "구리 블록": 16 },
+            "오르딘 미니 망치": { "오르딘": 1, "사파이어 블록": 1, "스킬 펄스": 1, "다이아몬드": 4, "철 블록": 2, "안산암": 32 },
+            "루미트 강철 방패": { "루미트": 1, "토파즈 블록": 1, "스킬 펄스": 1, "꽁꽁 언 얼음": 8, "청금석 블록": 8, "응회암": 32 },
+            "크레온 장인 석궁": { "크레온": 1, "플래티넘 블록": 1, "스킬 펄스": 2, "테라코타": 16, "금 블록": 2, "레드스톤 블록": 8 },
+            "벨릭 사냥 스피어": { "벨릭": 1, "토파즈 블록": 3, "스킬 펄스": 3, "네더 석영": 32, "네더랙": 32, "석탄 블록": 8 },
+            "세르칸 초승달 단검": { "세르칸": 1, "플래티넘 블록": 5, "스킬 펄스": 5, "에메랄드": 2, "이끼 블록": 24, "구리 블록": 16 },
 
             // 세공품 일반 (새로 추가)
             "키론 오르골": { "키론": 1, "토파즈": 1 },
@@ -503,7 +503,7 @@
                 items: ["토파즈", "사파이어", "플래티넘", "토파즈 블록", "사파이어 블록", "플래티넘 블록", "코룸", "리프톤", "세렌트", "키론", "테라온", "실바니움", "라온", "제피르", "아스트랄", "넬트", "세피아", "피로시아", "키론 (100)", "테라온 (100)", "실바니움 (100)", "라온 (100)", "제피르 (100)", "아스트랄 (100)", "넬트 (100)", "세피아 (100)", "피로시아 (100)", "탁월한 키론", "탁월한 테라온", "탁월한 실바니움", "탁월한 라온", "탁월한 제피르", "탁월한 아스트랄", "탁월한 넬트", "탁월한 세피아", "탁월한 피로시아"]
             },
             main: {
-                title: "⛏️ 주요 광물 및 블록",
+                title: "⛏️ 기타 광물 및 블록",
                 badgeColor: "bg-blue-950/60 text-blue-300 border-blue-800/50",
                 headerColor: "text-blue-300",
                 items: ["구리 블록", "철 블록", "금", "금 블록", "레드스톤 블록", "청금석 블록", "다이아몬드", "에메랄드", "자수정 블록", "석탄 블록"]
