@@ -132,7 +132,7 @@
         <header class="text-center mb-8">
             <div class="inline-flex items-center text-3xl mb-2 text-rosepink-400">
                 <i class="fa-solid fa-cube mr-3"></i>
-                <h1 class="text-2xl sm:text-3xl font-bold tracking-tight text-white">마인크래프트 제작 계산기</h1>
+                <h1 class="text-2xl sm:text-3xl font-bold tracking-tight text-rosepink-400">마인크래프트 제작 계산기</h1>
             </div>
             <p class="text-gray-400 text-sm">완성품 수량 기준 또는 보유 핵심 광물 기준으로 재료를 빠르게 계산합니다.</p>
         </header>
@@ -439,7 +439,8 @@
         };
 
         let currentTab = 'target';
-        let checkedState = {};
+        let checkedStateTarget = {};
+        let checkedStateStock = {};
         let activeCategoryTab = 'all';
 
         // 마인크래프트 세트(64개) 표기 변환 함수
@@ -518,7 +519,11 @@
         }
 
         function resetCheckmarks() {
-            checkedState = {};
+            if (currentTab === 'target') {
+                checkedStateTarget = {};
+            } else {
+                checkedStateStock = {};
+            }
             calculate();
         }
 
@@ -665,7 +670,8 @@
                 `;
 
                 entries.forEach(([item, qty]) => {
-                const isChecked = checkedState[item] ? 'checked' : '';
+                const currentCheckedMap = currentTab === 'target' ? checkedStateTarget : checkedStateStock;
+                const isChecked = currentCheckedMap[item] ? 'checked' : '';
                 const lineThrough = isChecked ? 'line-through text-gray-500 opacity-60' : 'text-gray-100 font-medium';
                 htmlContent += `
                     <div class="item-card bg-smokedark-900 border ${isChecked ? 'border-smokedark-800 bg-smokedark-950/40 opacity-60' : 'border-smokedark-700'} rounded-xl p-2.5 flex items-center justify-between group cursor-pointer" onclick="handleCardClick(event, '${item}')">
@@ -694,17 +700,19 @@
         // 체크박스 자체나 라벨을 클릭했을 때는 이벤트 중복 발생 방지
         if (event.target.tagName === 'INPUT' || event.target.tagName === 'LABEL') return;
         
-        checkedState[item] = !checkedState[item];
-        if (!checkedState[item]) delete checkedState[item];
+        const currentCheckedMap = currentTab === 'target' ? checkedStateTarget : checkedStateStock;
+        currentCheckedMap[item] = !currentCheckedMap[item];
+        if (!currentCheckedMap[item]) delete currentCheckedMap[item];
         calculate();
     }
 
     function toggleCheck(item) {
         const chk = document.getElementById(`chk_${item}`);
+        const currentCheckedMap = currentTab === 'target' ? checkedStateTarget : checkedStateStock;
         if (chk && chk.checked) {
-            checkedState[item] = true;
+            currentCheckedMap[item] = true;
         } else {
-            delete checkedState[item];
+            delete currentCheckedMap[item];
         }
         calculate();
     }
