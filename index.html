@@ -415,7 +415,7 @@
                     "코룸", "리프톤", "세렌트", "오르딘", "루미트", "크레온", "벨릭", "세르칸",
                     "키론", "테라온", "실바니움", "라온", "제피르", "아스트랄", "넬트", "세피아", "피로시아", 
                     "키론 (100)", "테라온 (100)", "실바니움 (100)", "라온 (100)", "제피르 (100)", "아스트랄 (100)", "넬트 (100)", "세피아 (100)", "피로시아 (100)", 
-                    "탁월한 키론", "탁월한 테라온", "탁월한 실바니움", "탁월한 라온", "탁월한 제피르", "탁월한 아스트랄", "탁월한 넬트", "탁월한 세피아", "탁월한 피로시아"
+                    "탁월한 키론", "탁월한 테라온", "탁월한 실바니움", "탁월한 라온", "탁월한 제피르", "탁월한 아스트랄", "탁월한 넬트", "탁월한 세피아", "탁월한 피로시아", "스킬 펄스"
                 ]
             },
             main: {
@@ -432,7 +432,7 @@
                 badgeColor: "bg-emerald-950/60 text-emerald-300 border-emerald-800/50",
                 headerColor: "text-emerald-300",
                 items: [
-                    "스킬 펄스", "조약돌 뭉치", "심층암 조약돌 뭉치", "안산암", "응회암", "꽁꽁 언 얼음", "테라코타", "네더 석영", "네더랙", "이끼 블록",
+                    "조약돌 뭉치", "심층암 조약돌 뭉치", "안산암", "응회암", "꽁꽁 언 얼음", "테라코타", "네더 석영", "네더랙", "이끼 블록",
                     "소리 블록", "주크박스", "숯", "망원경", "부싯돌과 부시", "나침반", "시계", "유리판"
                 ]
             }
@@ -473,7 +473,6 @@
                 uniqueJewelryMeta.forEach(m => {
                     const el = document.getElementById(`target_탁월한 ${m.name}`);
                     if (el) {
-                        // 각 항목의 정확한 ID 명칭 설정
                         el.id = `target_탁월한 ${m.name}`;
                     }
                 });
@@ -612,23 +611,10 @@
                     craftSummaryList.innerHTML = `<div class="col-span-full text-center text-xs text-gray-400 py-2">제작 가능한 완성품이 없습니다. 광물을 입력해주세요.</div>`;
                 }
 
-                for (let [item, qty] of Object.entries(stock)) {
-                    if (qty > 0) {
-                        let recipeTargetName = item;
-                        if (item === '오르딘') recipeTargetName = '오르딘 미니 망치';
-                        else if (item === '루미트') recipeTargetName = '루미트 강철 방패';
-                        else if (item === '크레온') recipeTargetName = '크레온 장인 석궁';
-                        else if (item === '벨릭') recipeTargetName = '벨릭 사냥 스피어';
-                        else if (item === '세르칸') recipeTargetName = '세르칸 초승달 단검';
-                        else if (item === '코룸') recipeTargetName = '하급 라이프스톤';
-                        else if (item === '리프톤') recipeTargetName = '중급 라이프스톤';
-                        else if (item === '세렌트') recipeTargetName = '상급 라이프스톤';
-
-                        if (RECIPES[recipeTargetName]) {
-                            addRecursive(recipeTargetName, qty);
-                        } else {
-                            totals[item] = (totals[item] || 0) + qty;
-                        }
+                // 보유중인 광물 기준 결과 계산 (제작 가능 완성품 수량 기준 정산)
+                for (let [craftItem, qty] of Object.entries(craftableSummary)) {
+                    if (qty > 0 && RECIPES[craftItem]) {
+                        addRecursive(craftItem, qty);
                     }
                 }
             }
