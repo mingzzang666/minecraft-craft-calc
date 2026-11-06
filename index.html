@@ -178,10 +178,10 @@
                     </div>
                 </div>
 
-                <!-- 형광 장비 카드 -->
+                <!-- 형광 제련품 카드 -->
                 <div class="card-bg rounded-2xl p-5 border border-rosepink-500/30 shadow-lg shadow-rosepink-950/20">
                     <h2 class="text-base font-bold text-rosepink-300 mb-3 flex items-center gap-2 border-b border-smokedark-700 pb-2">
-                        <i class="fa-solid fa-wand-magic-sparkles text-rosepink-400"></i> 형광 장비
+                        <i class="fa-solid fa-wand-magic-sparkles text-rosepink-400"></i> 형광 제련품
                     </h2>
                     <div class="space-y-2.5">
                         <div class="flex items-center justify-between">
@@ -239,16 +239,16 @@
                     <span class="absolute -top-2.5 left-4 px-2 bg-smokedark-800 text-xs font-semibold text-rosepink-400 border border-smokedark-700 rounded">라이프스톤 핵심 광물</span>
                     <div class="grid grid-cols-3 gap-3 pt-1">
                         <div class="inner-box p-3 rounded-xl">
-                            <label class="block text-xs font-semibold text-gray-300 mb-1">코룸</label>
-                            <input type="number" id="stock_코룸" min="0" value="0" oninput="calculate()" class="w-full input-box rounded-lg px-2.5 py-1 text-right font-bold text-sm">
+                            <label class="block text-xs font-semibold text-gray-300 mb-1">코룸 주괴</label>
+                            <input type="number" id="stock_코룸 주괴" min="0" value="0" oninput="calculate()" class="w-full input-box rounded-lg px-2.5 py-1 text-right font-bold text-sm">
                         </div>
                         <div class="inner-box p-3 rounded-xl">
-                            <label class="block text-xs font-semibold text-gray-300 mb-1">리프톤</label>
-                            <input type="number" id="stock_리프톤" min="0" value="0" oninput="calculate()" class="w-full input-box rounded-lg px-2.5 py-1 text-right font-bold text-sm">
+                            <label class="block text-xs font-semibold text-gray-300 mb-1">리프톤 주괴</label>
+                            <input type="number" id="stock_리프톤 주괴" min="0" value="0" oninput="calculate()" class="w-full input-box rounded-lg px-2.5 py-1 text-right font-bold text-sm">
                         </div>
                         <div class="inner-box p-3 rounded-xl">
-                            <label class="block text-xs font-semibold text-gray-300 mb-1">세렌트</label>
-                            <input type="number" id="stock_세렌트" min="0" value="0" oninput="calculate()" class="w-full input-box rounded-lg px-2.5 py-1 text-right font-bold text-sm">
+                            <label class="block text-xs font-semibold text-gray-300 mb-1">세렌트 주괴</label>
+                            <input type="number" id="stock_세렌트 주괴" min="0" value="0" oninput="calculate()" class="w-full input-box rounded-lg px-2.5 py-1 text-right font-bold text-sm">
                         </div>
                     </div>
                 </div>
@@ -348,9 +348,9 @@
     <script>
         // 마인크래프트 조합법 정의 (라이프스톤, 형광 제련품, 세공품 일반/탁월한 포함 정확한 조합식)
         const RECIPES = {
-            "하급 라이프스톤": { "조약돌 뭉치": 2, "구리 블록": 8, "레드스톤 블록": 3, "코룸": 1 },
-            "중급 라이프스톤": { "심층암 조약돌 뭉치": 2, "청금석 블록": 5, "철 블록": 5, "다이아몬드 블록": 3, "리프톤": 2 },
-            "상급 라이프스톤": { "구리 블록": 30, "자수정 블록": 20, "철 블록": 7, "금 블록": 7, "다이아몬드 블록": 5, "세렌트": 3 },
+            "하급 라이프스톤": { "조약돌 뭉치": 2, "구리 블록": 8, "레드스톤 블록": 3, "코룸 주괴": 1 },
+            "중급 라이프스톤": { "심층암 조약돌 뭉치": 2, "청금석 블록": 5, "철 블록": 5, "다이아몬드 블록": 3, "리프톤 주괴": 2 },
+            "상급 라이프스톤": { "구리 블록": 30, "자수정 블록": 20, "철 블록": 7, "금 블록": 7, "다이아몬드 블록": 5, "세렌트 주괴": 3 },
             
             "오르딘 미니 망치": { "오르딘": 1, "사파이어 블록": 1, "스킬 펄스": 1, "다이아몬드": 4, "철 블록": 2, "안산암": 32 },
             "루미트 강철 방패": { "루미트": 1, "토파즈 블록": 1, "스킬 펄스": 1, "꽁꽁 언 얼음": 8, "청금석 블록": 8, "응회암": 32 },
@@ -371,26 +371,34 @@
 
             // 세공품 (100) 버전
             "키론 오르골 (100)": { "키론 (100)": 1, "토파즈": 4, "구리 블록": 6, "다이아몬드": 3 },
-            "테라온 축음기 (100)": { "테라온 (100)": 1, "사파이어": 4, "레드스톤 블록": 6, "금": 4 },
+            "테라온 축음기 (100)": { "테라온 (100)": 1, "사파이어": 4, "레드스톤 블록": 6, "금 주괴": 4 },
             "실바니움 만년필 (100)": { "실바니움 (100)": 1, "플래티넘": 4, "석탄 블록": 2, "에메랄드": 3 },
             "라온 만화경 (100)": { "라온 (100)": 1, "사파이어": 4, "청금석 블록": 6, "에메랄드": 3 },
             "제피르 라이터 (100)": { "제피르 (100)": 1, "플래티넘": 4, "석탄 블록": 2, "다이아몬드": 3 },
-            "아스트랄 이어커프 (100)": { "아스트랄 (100)": 1, "토파즈": 4, "철 블록": 2, "금": 4 },
-            "넬트 천체관측기 (100)": { "넬트 (100)": 1, "플래티넘": 4, "레드스톤 블록": 6, "금": 4 },
+            "아스트랄 이어커프 (100)": { "아스트랄 (100)": 1, "토파즈": 4, "철 블록": 2, "금 주괴": 4 },
+            "넬트 천체관측기 (100)": { "넬트 (100)": 1, "플래티넘": 4, "레드스톤 블록": 6, "금 주괴": 4 },
             "세피아 회중시계 (100)": { "세피아 (100)": 1, "토파즈": 4, "철 블록": 2, "에메랄드": 3 },
             "피로시아 단안경 (100)": { "피로시아 (100)": 1, "사파이어": 4, "청금석 블록": 6, "다이아몬드": 3 },
 
             // 탁월한 세공품
             "탁월한 키론 오르골": { "탁월한 키론": 1, "스킬 펄스": 5, "토파즈": 32, "구리 블록": 24, "다이아몬드": 12, "소리 블록": 1 },
-            "탁월한 테라온 축음기": { "탁월한 테라온": 1, "스킬 펄스": 5, "사파이어": 32, "레드스톤 블록": 24, "금": 16, "주크박스": 1 },
+            "탁월한 테라온 축음기": { "탁월한 테라온": 1, "스킬 펄스": 5, "사파이어": 32, "레드스톤 블록": 24, "금 주괴": 16, "주크박스": 1 },
             "탁월한 실바니움 만년필": { "탁월한 실바니움": 1, "스킬 펄스": 5, "플래티넘": 32, "석탄 블록": 8, "에메랄드": 12, "숯": 4 },
             "탁월한 라온 만화경": { "탁월한 라온": 1, "스킬 펄스": 5, "사파이어": 32, "청금석 블록": 24, "에메랄드": 12, "망원경": 1 },
             "탁월한 제피르 라이터": { "탁월한 제피르": 1, "스킬 펄스": 5, "플래티넘": 32, "석탄 블록": 8, "다이아몬드": 12, "부싯돌과 부시": 1 },
-            "탁월한 아스트랄 이어커프": { "탁월한 아스트랄": 1, "스킬 펄스": 5, "토파즈": 32, "철 블록": 6, "금": 16, "에메랄드": 1 },
-            "탁월한 넬트 천체관측기": { "탁월한 넬트": 1, "스킬 펄스": 5, "플래티넘": 32, "레드스톤 블록": 24, "금": 16, "나침반": 1 },
+            "탁월한 아스트랄 이어커프": { "탁월한 아스트랄": 1, "스킬 펄스": 5, "토파즈": 32, "철 블록": 6, "금 주괴": 16, "에메랄드": 1 },
+            "탁월한 넬트 천체관측기": { "탁월한 넬트": 1, "스킬 펄스": 5, "플래티넘": 32, "레드스톤 블록": 24, "금 주괴": 16, "나침반": 1 },
             "탁월한 세피아 회중시계": { "탁월한 세피아": 1, "스킬 펄스": 5, "토파즈": 32, "철 블록": 6, "에메랄드": 12, "시계": 1 },
             "탁월한 피로시아 단안경": { "탁월한 피로시아": 1, "스킬 펄스": 5, "사파이어": 32, "청금석 블록": 24, "다이아몬드": 12, "유리판": 4 }
         };
+
+        // 결과 목록에서 출력에서 제외할 입력 전용 핵심 광물/보석 목록
+        const EXCLUDE_RESULT_ITEMS = [
+            "코룸 주괴", "리프톤 주괴", "세렌트 주괴", "오르딘", "루미트", "크레온", "벨릭", "세르칸",
+            "키론", "테라온", "실바니움", "라온", "제피르", "아스트랄", "넬트", "세피아", "피로시아",
+            "키론 (100)", "테라온 (100)", "실바니움 (100)", "라온 (100)", "제피르 (100)", "아스트랄 (100)", "넬트 (100)", "세피아 (100)", "피로시아 (100)",
+            "탁월한 키론", "탁월한 테라온", "탁월한 실바니움", "탁월한 라온", "탁월한 제피르", "탁월한 아스트랄", "탁월한 넬트", "탁월한 세피아", "탁월한 피로시아"
+        ];
 
         const uniqueJewelryMeta = [
             { gem: '키론', name: '키론 오르골' },
@@ -412,7 +420,7 @@
                 headerColor: "text-purple-300",
                 items: [
                     "토파즈", "사파이어", "플래티넘", "토파즈 블록", "사파이어 블록", "플래티넘 블록", 
-                    "코룸", "리프톤", "세렌트", "오르딘", "루미트", "크레온", "벨릭", "세르칸",
+                    "코룸 주괴", "리프톤 주괴", "세렌트 주괴", "오르딘", "루미트", "크레온", "벨릭", "세르칸",
                     "키론", "테라온", "실바니움", "라온", "제피르", "아스트랄", "넬트", "세피아", "피로시아", 
                     "키론 (100)", "테라온 (100)", "실바니움 (100)", "라온 (100)", "제피르 (100)", "아스트랄 (100)", "넬트 (100)", "세피아 (100)", "피로시아 (100)", 
                     "탁월한 키론", "탁월한 테라온", "탁월한 실바니움", "탁월한 라온", "탁월한 제피르", "탁월한 아스트랄", "탁월한 넬트", "탁월한 세피아", "탁월한 피로시아", "스킬 펄스"
@@ -423,7 +431,7 @@
                 badgeColor: "bg-blue-950/60 text-blue-300 border-blue-800/50",
                 headerColor: "text-blue-300",
                 items: [
-                    "구리 블록", "철 블록", "금", "금 블록", "레드스톤 블록", "청금석 블록", 
+                    "구리 블록", "철 블록", "금 주괴", "금 블록", "레드스톤 블록", "청금석 블록", 
                     "다이아몬드", "다이아몬드 블록", "에메랄드", "자수정 블록", "석탄 블록"
                 ]
             },
@@ -579,9 +587,9 @@
                 let craftableSummary = {};
 
                 // 라이프스톤 핵심광물 계산
-                if (stock['코룸'] >= 1) craftableSummary['하급 라이프스톤'] = Math.floor(stock['코룸'] / 1);
-                if (stock['리프톤'] >= 2) craftableSummary['중급 라이프스톤'] = Math.floor(stock['리프톤'] / 2);
-                if (stock['세렌트'] >= 3) craftableSummary['상급 라이프스톤'] = Math.floor(stock['세렌트'] / 3);
+                if (stock['코룸 주괴'] >= 1) craftableSummary['하급 라이프스톤'] = Math.floor(stock['코룸 주괴'] / 1);
+                if (stock['리프톤 주괴'] >= 2) craftableSummary['중급 라이프스톤'] = Math.floor(stock['리프톤 주괴'] / 2);
+                if (stock['세렌트 주괴'] >= 3) craftableSummary['상급 라이프스톤'] = Math.floor(stock['세렌트 주괴'] / 3);
 
                 // 형광 핵심 광물 계산
                 const glowMap = [
@@ -639,6 +647,9 @@
 
             let totalCount = 0;
             for (let [item, qty] of Object.entries(totals)) {
+                // 핵심 광물/보석 등 사용자가 직접 개수를 입력하는 핵심 입력 항목은 결과 목록에서 제외
+                if (EXCLUDE_RESULT_ITEMS.includes(item)) continue;
+
                 totalCount++;
                 if (CATEGORY_MAP.rare.items.includes(item)) {
                     groups.rare.list[item] = qty;
